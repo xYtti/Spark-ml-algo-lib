@@ -35,7 +35,7 @@ is_raw=$5
 if_check=$6
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 
-model_conf=${algorithm_type}-${data_structure}-${dataset_name}-${api_name}-${is_raw}-${if_check}
+model_conf=${algorithm_type}_${data_structure}_${dataset_name}_${api_name}_${is_raw}_${if_check}
 
 # concatnate strings as a new variable
 num_executors="numExectuors"
