@@ -1,13 +1,18 @@
 package com.bigdata.utils
 
+import org.apache.hadoop.fs.{FileSystem, Path}
+
 import java.io.{File, FileInputStream, InputStreamReader, PrintWriter}
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
-
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.mllib.linalg._
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+
+import java.nio.file.{Files, Paths}
+import scala.io.Source
 
 
 object Utils {
@@ -41,6 +46,43 @@ object Utils {
     sf.format(new Date(utcMilliseconds))
   }
 
+  def checkDirs(dirName: String): Unit ={
+    val folder = new File(dirName)
+    if (!folder.exists()) {
+      val mkdir = folder.mkdirs()
+      println(s"Create dir report ${mkdir}")
+    }
+  }
+
+  def saveDoubleRes(res: Double, savePath: String, sc: SparkContext): Unit ={
+    val result = new Array[String](1)
+    result(0) = res.toString
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val saveFile = new Path(savePath)
+    if (fs.exists(saveFile)) {
+      fs.delete(saveFile, true)
+    }
+    sc.parallelize(result).repartition(1).saveAsTextFile(savePath)
+  }
+
+  def compareDoubleResults(saveDataPath: String, verifiedDataPath: String): String = {
+    if(Files.exists(Paths.get(verifiedDataPath))){
+      val saveFile = Source.fromFile(saveDataPath)
+      val verifiedFile = Source.fromFile(verifiedDataPath)
+      val pri = saveFile.getLines().toArray
+      val opt = verifiedFile.getLines().toArray
+      saveFile.close()
+      verifiedFile.close()
+      if (math.abs(pri(0).toDouble - opt(0).toDouble) / pri(0).toDouble <= 0.005) {
+        return "correct"
+      }
+      else {
+        return "incorrect"
+      }
+    }else{
+      return "invaildComparison"
+    }
+  }
 
   /**
     *  Convert DenseMatrix to 2-dimension array, stored in row major
@@ -78,6 +120,27 @@ object Utils {
     val writer =new PrintWriter(path)
     vector.values.foreach(d => writer.write(d + "\n"))
     writer.close()
+  }
+
+  def readMatrix(path: String): Array[Array[Double]] = {
+    val file = Source.fromFile(path)
+    val arr = file.getLines().map(line => line.split(",").map(_.toDouble)).toArray
+    file.close()
+    arr
+  }
+
+  def isEqualMatrix(opensourceMatrix: Array[Array[Double]], boostkitMatrix: Array[Array[Double]], tol: Double = 1e-6): Boolean = {
+    if(opensourceMatrix.length != boostkitMatrix.length)
+      return false
+    for(i <- boostkitMatrix.indices) {
+      if(opensourceMatrix(i).length != boostkitMatrix(i).length)
+        return false
+      for(j <- opensourceMatrix(i).indices) {
+        if(math.abs(math.abs(opensourceMatrix(i)(j)) - math.abs(boostkitMatrix(i)(j))) > tol)
+          return false
+      }
+    }
+    true
   }
 
   }

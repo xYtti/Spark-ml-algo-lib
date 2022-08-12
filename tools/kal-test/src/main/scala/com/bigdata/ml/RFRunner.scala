@@ -1,6 +1,7 @@
 package com.bigdata.ml
-import java.io.{File, FileWriter}
-
+import java.io.{File, FileWriter, PrintWriter}
+import java.nio.file.{Paths, Files}
+import scala.io.Source
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.Pipeline
@@ -11,8 +12,9 @@ import org.yaml.snakeyaml.representer.Representer
 
 import scala.beans.BeanProperty
 import java.util
-
 import com.bigdata.utils.Utils
+import com.bigdata.compare.ml.EvaluationVerify
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.ml.classification.RandomForestClassifier
 import org.apache.spark.ml.evaluation.{MulticlassClassificationEvaluator, RegressionEvaluator}
 import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
@@ -37,12 +39,13 @@ class RFParams extends Serializable {
   @BeanProperty var numTrees: Int = _
   @BeanProperty var maxDepth: Int = _
   @BeanProperty var maxBins: Int = _
-  @BeanProperty var numClasses: Int = _
   @BeanProperty var useNodeIdCache: Boolean = _
   @BeanProperty var checkpointInterval: Int = _
+  @BeanProperty var numClasses: Int = _
+  @BeanProperty var bcVariables: Boolean = _
   @BeanProperty var featureSubsetStrategy: String = _
   @BeanProperty var featuresType: String = _
-  @BeanProperty var bcVariables: Boolean = _
+
   @BeanProperty var trainingDataPath: String = _
   @BeanProperty var testDataPath: String = _
   @BeanProperty var algorithmType: String = _
@@ -54,6 +57,10 @@ class RFParams extends Serializable {
   @BeanProperty var isRaw: String = _
   @BeanProperty var algorithmName: String = _
   @BeanProperty var testcaseType: String = _
+  @BeanProperty var saveDataPath: String = _
+  @BeanProperty var verifiedDataPath: String = _
+  @BeanProperty var ifCheck: String = _
+  @BeanProperty var isCorrect: String = _
 }
 
 object RFRunner {
@@ -69,9 +76,11 @@ object RFRunner {
 
       val cpuName = args(2)
       val isRaw = args(3)
-      val sparkConfSplit = args(4).split("_")
+      val ifCheck = args(4)
+      val sparkConfSplit = args(5).split("_")
       val (master, deployMode, numExec, execCores, execMem) =
         (sparkConfSplit(0), sparkConfSplit(1), sparkConfSplit(2), sparkConfSplit(3), sparkConfSplit(4))
+      val saveResultPath = args(6)
 
       val stream = Utils.getStream("conf/ml/rf/rf.yml")
       val representer = new Representer
@@ -86,7 +95,7 @@ object RFRunner {
 
       val rfParamMap: util.HashMap[String, Object] = configs.rf.get(isRaw match {
         case "no" => "opt"
-        case _ => "raw"
+        case "yes" => "raw"
       }).get(algorithmType).get(dataStructure).get(datasetName)
       params.setGenericPt(rfParamMap.getOrDefault("genericPt", "1000").asInstanceOf[Int])
       params.setMaxMemoryInMB(rfParamMap.getOrDefault("maxMemoryInMB", "256").asInstanceOf[Int])
@@ -108,19 +117,21 @@ object RFRunner {
       params.setDatasetName(datasetName)
       params.setCpuName(cpuName)
       params.setIsRaw(isRaw)
+      params.setIfCheck(ifCheck)
       params.setAlgorithmName("RF")
-
+      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${algorithmType}_${datasetName}_${dataStructure}_${apiName}")
+      params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
+      var appName = s"${params.algorithmName}_${algorithmType}_${datasetName}_${dataStructure}_${apiName}"
+      if (isRaw.equals("yes")){
+        appName = s"${params.algorithmName}_${algorithmType}_${datasetName}_${dataStructure}_${apiName}_RAW"
+        params.setVerifiedDataPath(params.saveDataPath)
+        params.setSaveDataPath(s"${params.saveDataPath}_raw")
+      }
+      params.setTestcaseType(appName)
       if (apiName != "fit") {
         params.setNumTrees(5)
         params.setMaxDepth(3)
       }
-
-      var appName = s"RF_${algorithmType}_${datasetName}_${dataStructure}_${apiName}"
-      if (isRaw.equals("yes")){
-        appName = s"RF_RAW_${algorithmType}_${datasetName}_${dataStructure}_${apiName}"
-      }
-      params.setTestcaseType(appName)
-
 
       val conf = new SparkConf().setAppName(appName).setMaster(master)
       val commonParas = Array (
@@ -130,7 +141,7 @@ object RFRunner {
         ("spark.executor.memory", execMem)
       )
       conf.setAll(commonParas)
-      if ("no" == isRaw.asInstanceOf[String]) {
+      if (isRaw.equals("no")) {
         conf.set("spark.boostkit.ml.rf.binnedFeaturesDataType",
           rfParamMap.get("featuresType").asInstanceOf[String])
         conf.set("spark.boostkit.ml.rf.numTrainingDataCopies",
@@ -149,17 +160,20 @@ object RFRunner {
       params.setEvaluation(res)
       params.setCostTime(costTime)
 
-      val folder = new File("report")
-      if (!folder.exists()) {
-        val mkdir = folder.mkdirs()
-        println(s"Create dir report ${mkdir}")
+      Utils.checkDirs("report")
+      if(ifCheck.equals("yes")){
+        params.setIsCorrect(EvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
+        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        writerIsCorrect.write(s"${params.algorithmName}_${params.algorithmType}_${params.datasetName}_${params.apiName} ${params.isCorrect} \n")
+        writerIsCorrect.close()
       }
-      val writer = new FileWriter(s"report/RF_${
+
+      val writer = new FileWriter(s"report/${params.testcaseType}_${
         Utils.getDateStrFromUTC("yyyyMMdd_HHmmss",
           System.currentTimeMillis())
       }.yml")
-
       yaml.dump(params, writer)
+
       println(s"Exec Successful: costTime: ${costTime}s; evaluation: ${res}")
     } catch {
       case e: Throwable =>
@@ -170,6 +184,7 @@ object RFRunner {
 
 class RFKernel {
   def rfDataframeJob(spark: SparkSession, params: RFParams): (Double, Double) = {
+    val sc = spark.sparkContext
     val pt = params.pt
     val trainingDataPath = params.trainingDataPath
     val testDataPath = params.testDataPath
@@ -292,6 +307,8 @@ class RFKernel {
           .setMetricName ("rmse")
     }
     val res = evaluator.evaluate(predictions)
+    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+
     (res, costTime)
   }
 
@@ -388,6 +405,8 @@ class RFKernel {
       case "classification" => 1.0 - labeleAndPreds.filter(r => r._1 == r._2).count.toDouble / testLabelPositive.count()
       case "regression" => math.sqrt(labeleAndPreds.map{ case(v, p) => math.pow((v - p), 2)}.mean())
     }
+    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+
     (res, costTime)
   }
 
