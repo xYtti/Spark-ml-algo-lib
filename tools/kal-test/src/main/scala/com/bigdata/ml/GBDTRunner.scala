@@ -67,14 +67,13 @@ object GBDTRunner {
   def main(args: Array[String]): Unit = {
 
     try {
-      val modelConfSplit = args(0).split("-")
-      val (algorithmType, dataStructure, datasetName, apiName, isRaw) =
-        (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4))
+      val modelConfSplit = args(0).split("_")
+      val (algorithmType, dataStructure, datasetName, apiName, isRaw, ifCheck) =
+        (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4), modelConfSplit(5))
       val dataPath = args(1)
       val dataPathSplit = dataPath.split(",")
       val (trainingDataPath, testDataPath) = (dataPathSplit(0), dataPathSplit(1))
-      val ifCheck = args(2)
-      val saveResultPath = args(3)
+      val saveResultPath = args(2)
 
       val stream = Utils.getStream("conf/ml/gbdt/gbdt.yml")
       val representer = new Representer
@@ -133,7 +132,7 @@ object GBDTRunner {
       if(ifCheck.equals("yes")){
         params.setIsCorrect(EvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
         val writerIsCorrect = new FileWriter(s"${saveResultPath}/!ml_isCorrect.txt", true)
-        writerIsCorrect.write(s"${params.algorithmName}_${params.algorithmType}_${params.datasetName}_${params.apiName} ${params.isCorrect} \n")
+        writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }
 

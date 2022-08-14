@@ -67,20 +67,16 @@ object RFRunner {
   def main(args: Array[String]): Unit = {
     try {
       val modelConfSplit = args(0).split("_")
-      val (algorithmType, dataStructure, datasetName, apiName) =
-        (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3))
-
+      val (algorithmType, dataStructure, datasetName, apiName, isRaw, ifCheck) =
+        (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4), modelConfSplit(5))
       val dataPath = args(1)
       val dataPathSplit = dataPath.split(",")
       val (trainingDataPath, testDataPath) = (dataPathSplit(0), dataPathSplit(1))
-
       val cpuName = args(2)
-      val isRaw = args(3)
-      val ifCheck = args(4)
-      val sparkConfSplit = args(5).split("_")
+      val sparkConfSplit = args(3).split("_")
       val (master, deployMode, numExec, execCores, execMem) =
         (sparkConfSplit(0), sparkConfSplit(1), sparkConfSplit(2), sparkConfSplit(3), sparkConfSplit(4))
-      val saveResultPath = args(6)
+      val saveResultPath = args(4)
 
       val stream = Utils.getStream("conf/ml/rf/rf.yml")
       val representer = new Representer
@@ -123,7 +119,7 @@ object RFRunner {
       params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${algorithmType}_${datasetName}_${dataStructure}_${apiName}"
       if (isRaw.equals("yes")){
-        appName = s"${params.algorithmName}_${algorithmType}_${datasetName}_${dataStructure}_${apiName}_RAW"
+        appName = s"${params.algorithmName}_${algorithmType}_${datasetName}_${dataStructure}_${apiName}_raw"
         params.setVerifiedDataPath(params.saveDataPath)
         params.setSaveDataPath(s"${params.saveDataPath}_raw")
       }
@@ -164,7 +160,7 @@ object RFRunner {
       if(ifCheck.equals("yes")){
         params.setIsCorrect(EvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
         val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
-        writerIsCorrect.write(s"${params.algorithmName}_${params.algorithmType}_${params.datasetName}_${params.apiName} ${params.isCorrect} \n")
+        writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }
 
