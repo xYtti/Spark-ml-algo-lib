@@ -157,6 +157,7 @@ class GBDTKernel {
 
   def runDataframeJob(spark: SparkSession, params: GBDTParams): (Double, Double) = {
     val sc = spark.sparkContext
+    println(s"Initialized spark session.")
     val startTime = System.currentTimeMillis()
 
     val trainingData = spark

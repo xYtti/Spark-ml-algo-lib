@@ -5,6 +5,7 @@ import java.util
 import scala.beans.BeanProperty
 import scala.collection.mutable
 import com.bigdata.utils.Utils
+import com.bigdata.compare.ml.EvaluationVerify
 import org.apache.spark.ml.recommendation.ALS
 import org.apache.spark.mllib.recommendation.Rating
 import org.apache.spark.mllib.linalg.SparseVector
