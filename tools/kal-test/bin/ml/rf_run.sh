@@ -26,7 +26,6 @@ if [ $# -ne 6 ]; then
 fi
 
 source conf/ml/rf/rf_spark.properties
-
 algorithm_type=$1
 data_structure=$2
 dataset_name=$3

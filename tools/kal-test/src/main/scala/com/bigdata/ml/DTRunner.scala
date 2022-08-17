@@ -344,7 +344,7 @@ class DTKernel {
           .setMetricName ("rmse")
     }
     val res = evaluator.evaluate(predictions)
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -405,7 +405,7 @@ class DTKernel {
       case "classification" => 1.0 - labeleAndPreds.filter(r => r._1 == r._2).count.toDouble / testLabelPositive.count()
       case "regression" => math.sqrt(labeleAndPreds.map{ case(v, p) => math.pow((v - p), 2)}.mean())
     }
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 

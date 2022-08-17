@@ -110,7 +110,7 @@ if [ ${is_raw} == "no" ]; then
   --jars "lib/fastutil-8.3.1.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   --driver-class-path "lib/kal-test_${scala_version_val}-0.1.jar:lib/fastutil-8.3.1.jar:lib/snakeyaml-1.19.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   --conf "spark.executor.extraClassPath=/opt/ml_classpath/fastutil-8.3.1.jar:/opt/ml_classpath/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} {save_resultPath_val}| tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} {save_resultPath_val}| tee ./log/log
 else
   spark-submit \
   --class com.bigdata.ml.LogRRunner \
@@ -123,5 +123,5 @@ else
   --master ${master_val} \
   --conf "spark.executor.extraJavaOptions=${extra_java_options_val}" \
   --driver-class-path "lib/snakeyaml-1.19.jar:lib/fastutil-8.3.1.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} {save_resultPath_val} | tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} {save_resultPath_val} | tee ./log/log
 fi

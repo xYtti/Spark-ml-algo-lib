@@ -4,16 +4,16 @@ set -e
 case "$1" in
 -h | --help | ?)
   echo "Usage: <path0> <path1>"
-  echo "1st argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
-  echo "2nd argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
+  echo "1st argument: path of XGBT result: eg [hdfs:///tmp/ml/result/XGBT/]"
+  echo "2nd argument: path of XGBT result: eg [hdfs:///tmp/ml/result/XGBT/]"
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
   echo "Usage: <path0> <path1>"
-  echo "1st argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
-  echo "2nd argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
+  echo "1st argument: path of XGBT result: eg [hdfs:///tmp/ml/result/XGBT/]"
+  echo "2nd argument: path of XGBT result: eg [hdfs:///tmp/ml/result/XGBT/]"
   exit 0
 fi
 

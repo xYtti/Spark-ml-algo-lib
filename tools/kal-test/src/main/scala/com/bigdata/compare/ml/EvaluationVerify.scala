@@ -10,7 +10,7 @@ object EvaluationVerify {
   def main(args: Array[String]): Unit = {
     val path0 = args(0)
     val path1 = args(1)
-    val sparkConf =  new SparkConf().setAppName("evaluationVerify")
+    val sparkConf =  new SparkConf().setAppName("EvaluationVerify")
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
     val isCorrect = compareRes(path0, path1, spark)
     val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
@@ -18,6 +18,17 @@ object EvaluationVerify {
     writerIsCorrect.close()
     println(s"${isCorrect}!")
 
+  }
+
+  def saveRes(res: Double, savePath: String, sc: SparkContext): Unit ={
+    val result = new Array[String](1)
+    result(0) = res.toString
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val saveFile = new Path(savePath)
+    if (fs.exists(saveFile)) {
+      fs.delete(saveFile, true)
+    }
+    sc.parallelize(result).repartition(1).saveAsTextFile(savePath)
   }
 
   def compareRes(path0: String, path1: String, spark: SparkSession): String = {

@@ -4,16 +4,16 @@ set -e
 case "$1" in
 -h | --help | ?)
   echo "Usage: <path0> <path1>"
-  echo "1st argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
-  echo "2nd argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
+  echo "1st argument: path of Pearson result: eg [hdfs:///tmp/ml/result/Pearson/]"
+  echo "2nd argument: path of Pearson result: eg [hdfs:///tmp/ml/result/Pearson/]"
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
   echo "Usage: <path0> <path1>"
-  echo "1st argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
-  echo "2nd argument: path of LogR result: eg [hdfs:///tmp/ml/result/LogR/]"
+  echo "1st argument: path of Pearson result: eg [hdfs:///tmp/ml/result/Pearson/]"
+  echo "2nd argument: path of Pearson result: eg [hdfs:///tmp/ml/result/Pearson/]"
   exit 0
 fi
 
@@ -25,7 +25,7 @@ scala_version=scalaVersion
 scala_version_val=${!scala_version}
 
 spark-submit \
---class com.bigdata.compare.ml.EvaluationVerify \
+--class com.bigdata.compare.ml.MatrixVerify \
 --master yarn \
 --num-executors 29 \
 --executor-memory 35g \

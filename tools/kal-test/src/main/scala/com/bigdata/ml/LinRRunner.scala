@@ -230,7 +230,7 @@ class LinRKernel {
 
     val res = predictions.select("squaredError").first().getString(0).toDouble
 
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
 
     (res, costTime)
   }

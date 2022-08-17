@@ -20,7 +20,7 @@ fi
 path0=$1
 path1=$2
 
-source conf/graph/ml_datasets.properties
+source conf/ml/ml_datasets.properties
 scala_version=scalaVersion
 scala_version_val=${!scala_version}
 

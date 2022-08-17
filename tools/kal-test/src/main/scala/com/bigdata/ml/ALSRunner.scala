@@ -96,6 +96,7 @@ object ALSRunner {
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("ALS")
       params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}_${dataStructure}_${apiName}_${cpuName}")
+      params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_${apiName}"
       if (isRaw.equals("yes")){
         appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_${apiName}_raw"
@@ -241,7 +242,7 @@ class ALSKernel {
       println("Mean Squared Error = " + p)
       p
     }
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
 
     (res, costTime)
   }
@@ -291,7 +292,7 @@ class ALSKernel {
       println("Mean Squared Error = " + p)
       p
     }
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 

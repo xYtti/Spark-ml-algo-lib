@@ -88,24 +88,23 @@ object RFRunner {
       yaml.addTypeDescription(description)
       val configs: RFConfig = yaml.load(stream).asInstanceOf[RFConfig]
       val params = new RFParams()
-
-      val ParamMap: util.HashMap[String, Object] = configs.rf.get(isRaw match {
+      val paramsMap: util.HashMap[String, Object] = configs.rf.get(isRaw match {
         case "no" => "opt"
         case "yes" => "raw"
       }).get(algorithmType).get(dataStructure).get(datasetName)
-      params.setGenericPt(ParamMap.getOrDefault("genericPt", "1000").asInstanceOf[Int])
-      params.setMaxMemoryInMB(ParamMap.getOrDefault("maxMemoryInMB", "256").asInstanceOf[Int])
-      params.setPt(ParamMap.getOrDefault("pt", "1000").asInstanceOf[Int])
-      params.setNumCopiesInput(ParamMap.getOrDefault("numCopiesInput", "1").asInstanceOf[Int])
-      params.setNumTrees(ParamMap.getOrDefault("numTrees", "20").asInstanceOf[Int])
-      params.setMaxDepth(ParamMap.getOrDefault("maxDepth", "5").asInstanceOf[Int])
-      params.setMaxBins(ParamMap.getOrDefault("maxBins", "32").asInstanceOf[Int])
-      params.setNumClasses(ParamMap.get("numClasses").asInstanceOf[Int])
-      params.setUseNodeIdCache(ParamMap.getOrDefault("useNodeIdCache", "false").asInstanceOf[Boolean])
-      params.setCheckpointInterval(ParamMap.getOrDefault("checkpointInterval", "10").asInstanceOf[Int])
-      params.setFeatureSubsetStrategy(ParamMap.getOrDefault("featureSubsetStrategy", "auto").asInstanceOf[String])
-      params.setFeaturesType(ParamMap.getOrDefault("featuresType", "array").asInstanceOf[String])
-      params.setBcVariables(ParamMap.getOrDefault("bcVariables", "false").asInstanceOf[Boolean])
+      params.setGenericPt(paramsMap.getOrDefault("genericPt", "1000").asInstanceOf[Int])
+      params.setMaxMemoryInMB(paramsMap.getOrDefault("maxMemoryInMB", "256").asInstanceOf[Int])
+      params.setPt(paramsMap.getOrDefault("pt", "1000").asInstanceOf[Int])
+      params.setNumCopiesInput(paramsMap.getOrDefault("numCopiesInput", "1").asInstanceOf[Int])
+      params.setNumTrees(paramsMap.getOrDefault("numTrees", "20").asInstanceOf[Int])
+      params.setMaxDepth(paramsMap.getOrDefault("maxDepth", "5").asInstanceOf[Int])
+      params.setMaxBins(paramsMap.getOrDefault("maxBins", "32").asInstanceOf[Int])
+      params.setNumClasses(paramsMap.get("numClasses").asInstanceOf[Int])
+      params.setUseNodeIdCache(paramsMap.getOrDefault("useNodeIdCache", "false").asInstanceOf[Boolean])
+      params.setCheckpointInterval(paramsMap.getOrDefault("checkpointInterval", "10").asInstanceOf[Int])
+      params.setFeatureSubsetStrategy(paramsMap.getOrDefault("featureSubsetStrategy", "auto").asInstanceOf[String])
+      params.setFeaturesType(paramsMap.getOrDefault("featuresType", "array").asInstanceOf[String])
+      params.setBcVariables(paramsMap.getOrDefault("bcVariables", "false").asInstanceOf[Boolean])
       params.setTrainingDataPath(trainingDataPath)
       params.setTestDataPath(testDataPath)
       params.setAlgorithmType(algorithmType)
@@ -139,13 +138,13 @@ object RFRunner {
       conf.setAll(commonParas)
       if (isRaw.equals("no")) {
         conf.set("spark.boostkit.ml.rf.binnedFeaturesDataType",
-          ParamMap.get("featuresType").asInstanceOf[String])
+          paramsMap.get("featuresType").asInstanceOf[String])
         conf.set("spark.boostkit.ml.rf.numTrainingDataCopies",
-          ParamMap.get("numCopiesInput").asInstanceOf[Int].toString)
+          paramsMap.get("numCopiesInput").asInstanceOf[Int].toString)
         conf.set("spark.boostkit.ml.rf.numPartsPerTrainingDataCopy",
-          ParamMap.get("pt").asInstanceOf[Int].toString)
+          paramsMap.get("pt").asInstanceOf[Int].toString)
         conf.set("spark.boostkit.ml.rf.broadcastVariables",
-          ParamMap.get("bcVariables").asInstanceOf[Boolean].toString)
+          paramsMap.get("bcVariables").asInstanceOf[Boolean].toString)
       }
       val spark = SparkSession.builder.config(conf).getOrCreate()
 
@@ -303,7 +302,7 @@ class RFKernel {
           .setMetricName ("rmse")
     }
     val res = evaluator.evaluate(predictions)
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -400,7 +399,7 @@ class RFKernel {
       case "classification" => 1.0 - labeleAndPreds.filter(r => r._1 == r._2).count.toDouble / testLabelPositive.count()
       case "regression" => math.sqrt(labeleAndPreds.map{ case(v, p) => math.pow((v - p), 2)}.mean())
     }
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 

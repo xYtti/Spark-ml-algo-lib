@@ -162,7 +162,7 @@ class SVMKernel {
 
     val result = model.transform(parsedTest)
     val res = result.filter($"label"===$"prediction").count().toDouble/result.count
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 }

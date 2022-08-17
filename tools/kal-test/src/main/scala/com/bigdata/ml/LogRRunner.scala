@@ -215,7 +215,7 @@ class LogRKernel {
 
     val predictions = model.transform(testingData)
     val res = predictions.filter($"label" === $"prediction").count().toDouble / predictions.count()
-    Utils.saveDoubleRes(res, params.saveDataPath, sc)
+    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
     (res, costTime)
   }
 }
