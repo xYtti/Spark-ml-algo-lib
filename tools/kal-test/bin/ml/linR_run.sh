@@ -13,7 +13,7 @@ case "$1" in
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 2 arguments:<dataset name> <api name>"
+  echo "please input 2 arguments:<dataset name> <api name> <isRaw> <isCheck>"
   echo "1st argument: name of dataset: e.g. mnist8m"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"

@@ -38,10 +38,10 @@ cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 model_conf=${algorithm_type}_${data_structure}_${dataset_name}_${api_name}_${is_raw}_${if_check}
 
 # concatnate strings as a new variable
-num_executors=${cpu_name}_${algorithm_type}"_"${dataset_name}"_numExectuors"
-executor_cores=${cpu_name}_${algorithm_type}"_"${dataset_name}"_executorCores"
-executor_memory=${cpu_name}_${algorithm_type}"_"${dataset_name}"_executorMemory"
-extra_java_options=${cpu_name}_${algorithm_type}"_"${dataset_name}"_extraJavaOptions"
+num_executors=${cpu_name}_${algorithm_type}_${dataset_name}"_numExectuors"
+executor_cores=${cpu_name}_${algorithm_type}_${dataset_name}"_executorCores"
+executor_memory=${cpu_name}_${algorithm_type}_${dataset_name}"_executorMemory"
+extra_java_options=${cpu_name}_${algorithm_type}_${dataset_name}"_extraJavaOptions"
 driver_cores="driverCores"
 driver_memory="driverMemory"
 master_="master"

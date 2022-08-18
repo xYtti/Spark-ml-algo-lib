@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
 -h | --help | ?)
-  echo "Usage: <data structure> <dataset name>"
+  echo "Usage: <data structure> <dataset name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. CP10M1K"
   echo "3nd argument: optimization algorithm or raw: [no/yes]"
@@ -13,7 +13,7 @@ case "$1" in
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 2 arguments: <data structure> <dataset name>"
+  echo "please input 2 arguments: <data structure> <dataset name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. CP10M1K"
   echo "3nd argument: optimization algorithm or raw: [no/yes]"

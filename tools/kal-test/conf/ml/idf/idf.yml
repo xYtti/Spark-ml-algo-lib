@@ -13,7 +13,7 @@ idf:
       fetchMethod: "fold"
       orcFormat: true
       Flag: [idf, "D2g250m"]
-  pri:
+  raw:
     D10m200m:
       pt: 30
       combineStrategy: "not used"

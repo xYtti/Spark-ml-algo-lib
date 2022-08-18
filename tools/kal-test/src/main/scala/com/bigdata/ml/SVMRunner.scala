@@ -108,7 +108,7 @@ object SVMRunner {
           System.currentTimeMillis())
       }.yml")
       yaml.dump(params, writer)
-      println(s"Exec Successful: costTime: ${costTime}s; evaluation: ${evaluation}")
+      println(s"Exec Successful: costTime: ${costTime}s; evaluation: ${evaluation};isCorrect: ${params.isCorrect}")
     }catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")

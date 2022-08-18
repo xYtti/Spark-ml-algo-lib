@@ -98,7 +98,7 @@ object CovRunner {
           System.currentTimeMillis())
       }.yml")
       yaml.dump(params, writer)
-      println(s"Exec Successful: costTime: ${params.getCostTime}s")
+      println(s"Exec Successful: costTime: ${params.getCostTime}s;isCorrect: ${params.isCorrect}")
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")

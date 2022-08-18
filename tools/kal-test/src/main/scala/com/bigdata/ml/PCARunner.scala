@@ -125,7 +125,7 @@ object PCARunner {
           System.currentTimeMillis())
       }.yml")
       yaml.dump(params, writer)
-      println(s"Exec Successful: costTime: ${costTime}s")
+      println(s"Exec Successful: costTime: ${costTime}s;isCorrect: ${params.isCorrect}")
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")

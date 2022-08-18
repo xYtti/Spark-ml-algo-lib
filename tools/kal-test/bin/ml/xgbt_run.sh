@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
 -h | --help | ?)
-  echo "Usage: <dataset name> <algorithm type>"
+  echo "Usage: <dataset name> <algorithm type> <isRaw> <isCheck>"
   echo "1rd argument: name of dataset: e.g. higgs"
   echo "2st argument: type of algorithm: [classification/regression]"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
@@ -13,7 +13,7 @@ case "$1" in
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 2 arguments: <dataset name> <algorithm type>"
+  echo "please input 2 arguments: <dataset name> <algorithm type> <isRaw> <isCheck>"
   echo "1rd argument: name of dataset: e.g. higgs"
   echo "2st argument: type of algorithm: [classification/regression]"
   echo "3th argument: optimization algorithm or raw: [no/yes]"

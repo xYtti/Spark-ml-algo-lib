@@ -172,7 +172,7 @@ object DTRunner {
           System.currentTimeMillis())
       }.yml")
       yaml.dump(params, writer)
-      println(s"Exec Successful: costTime: ${costTime}s; evaluation: ${res}")
+      println(s"Exec Successful: costTime: ${costTime}s; evaluation: ${res};isCorrect: ${params.isCorrect}")
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")
