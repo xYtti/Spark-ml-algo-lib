@@ -34,6 +34,7 @@ class SimRankParams extends Serializable {
   @BeanProperty var costTime: Double = _
   @BeanProperty var loadDataTime: Double = _
   @BeanProperty var algorithmName: String = _
+  @BeanProperty var testcaseType: String = _
   @BeanProperty var saveDataPath: String = _
   @BeanProperty var verifiedDataPath: String = _
   @BeanProperty var ifCheck: String = _
@@ -82,17 +83,20 @@ object SimRankRunner {
         params.setVerifiedDataPath(params.saveDataPath)
         params.setSaveDataPath(s"${params.saveDataPath}_raw")
       }
+      params.setTestcaseType(appName)
 
       val conf = new SparkConf().setAppName(appName)
       val spark = SparkSession.builder.config(conf).getOrCreate()
       val costTime = new SimRankKernel().runJob(spark, params)
 
-      val folder = new File("report")
-      if (!folder.exists()) {
-        val mkdir = folder.mkdirs()
-        println(s"Create dir report ${mkdir}")
+      Utils.checkDirs("report")
+      if(ifCheck.equals("yes")){
+        params.setIsCorrect(SimRankVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
+        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
+        writerIsCorrect.close()
       }
-      val writer = new FileWriter(s"report/SimRank_${
+      val writer = new FileWriter(s"report/${params.testcaseType}_${
         Utils.getDateStrFromUTC("yyyyMMdd_HHmmss",
           System.currentTimeMillis())
       }.yml")

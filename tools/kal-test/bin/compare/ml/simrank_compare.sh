@@ -1,9 +1,32 @@
-echo "====start===="
-date
+#!/bin/bash
+set -e
+
+case "$1" in
+-h | --help | ?)
+  echo "Usage: <path0> <path1>"
+  echo "1st argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  echo "2nd argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  exit 0
+  ;;
+esac
+
+if [ $# -ne 2 ]; then
+  echo "Usage: <path0> <path1>"
+  echo "1st argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  echo "2nd argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  exit 0
+fi
+
+path0=$1
+path1=$2
+
+source conf/ml/ml_datasets.properties
+scala_version=scalaVersion
+scala_version_val=${!scala_version}
 
 spark-submit \
 --driver-java-options "-Dlog4j.configuration=file:./log4j.properties" \
---class com.huawei.bigdata.ml.spark.SimRankCheckResult \
+--class com.bigdata.compare.ml.SimRankVerify \
 --master yarn \
 --deploy-mode client \
 --driver-cores 36 \
@@ -11,12 +34,4 @@ spark-submit \
 --num-executors 71 \
 --executor-memory 12g \
 --executor-cores 4 \
-./sophon-ml-test_2.11-1.3.0.jar \
-/tmp/wc_test/simrank/HibenchRating5wx5wuserSimHw \
-/tmp/wc_test/simrank/HibenchRating5wx5witemSimHw \
-/tmp/wc_test/simrank/HibenchRating5wx5wuserSimOpen \
-/tmp/wc_test/simrank/HibenchRating5wx5witemSimOpen
-
-
-echo "====end===="
-date
+./lib/kal-test_${scala_version_val}-0.1.jar ${path0} ${path1}
