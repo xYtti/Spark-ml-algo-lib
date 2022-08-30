@@ -103,7 +103,6 @@ object LogRRunner {
       if (cpuName.equals("raw")){
         appName = s"${params.algorithmName}_${datasetName}_${apiName}_raw"
         params.setVerifiedDataPath(params.saveDataPath)
-        params.setVerifiedDataPath(params.saveDataPath)
         params.setSaveDataPath(s"${params.saveDataPath}_raw")
       }
       params.setTestcaseType(appName)
