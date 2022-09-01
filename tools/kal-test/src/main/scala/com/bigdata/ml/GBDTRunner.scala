@@ -1,8 +1,12 @@
 package com.bigdata.ml
 
-import java.io.FileWriter
-import java.io.File
-import java.util.HashMap
+import com.bigdata.utils.Utils
+import com.bigdata.compare.ml.EvaluationVerify
+
+import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
+import org.yaml.snakeyaml.constructor.Constructor
+import org.yaml.snakeyaml.nodes.Tag
+import org.yaml.snakeyaml.representer.Representer
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.Pipeline
@@ -16,14 +20,11 @@ import org.apache.spark.mllib.util.MLUtils
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.configuration.BoostingStrategy
 import org.apache.spark.mllib.tree.GradientBoostedTrees
-import com.bigdata.utils.Utils
-import com.bigdata.compare.ml.EvaluationVerify
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
-import org.yaml.snakeyaml.constructor.Constructor
-import org.yaml.snakeyaml.nodes.Tag
-import org.yaml.snakeyaml.representer.Representer
 
+import java.io.FileWriter
+import java.io.File
+import java.util.HashMap
 import java.util
 import scala.beans.BeanProperty
 
@@ -67,7 +68,7 @@ object GBDTRunner {
   def main(args: Array[String]): Unit = {
 
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (algorithmType, dataStructure, datasetName, apiName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4), modelConfSplit(5))
       val dataPath = args(1)
@@ -152,7 +153,6 @@ object GBDTRunner {
 }
 
 
-
 class GBDTKernel {
 
   def runDataframeJob(spark: SparkSession, params: GBDTParams): (Double, Double) = {
@@ -224,13 +224,11 @@ class GBDTKernel {
 
     val paramMap = ParamMap(gbdt.maxDepth -> params.maxDepth)
       .put(gbdt.maxIter, params.maxIter)
-
     val paramMaps: Array[ParamMap] = new Array[ParamMap](2)
     for (i <- 0 to paramMaps.size -1) {
       paramMaps(i) = ParamMap(gbdt.maxDepth -> params.maxDepth)
         .put(gbdt.maxIter, params.maxIter)
     }
-
     val maxDepthParamPair = ParamPair(gbdt.maxDepth, params.maxDepth)
     val maxIterParamPair = ParamPair(gbdt.maxIter, params.maxIter)
     val maxBinsParamPair = ParamPair(gbdt.maxBins, params.maxBins)
@@ -244,7 +242,6 @@ class GBDTKernel {
       case "fit3" => pipeline.fit(trainingData, maxDepthParamPair, maxIterParamPair, maxBinsParamPair)
 
     }
-
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
 
     val testData = spark
@@ -253,10 +250,8 @@ class GBDTKernel {
       .option("vectorType", "dense")
       .load(params.testDataPath)
       .repartition(params.numPartitions)
-
     // Make predictions.
     val predictions = model.transform(testData)
-
     // Select (prediction, true label) and compute test error.
     val evaluator = params.algorithmType match {
       case "classification" =>
@@ -264,7 +259,6 @@ class GBDTKernel {
           .setLabelCol ("indexedLabel")
           .setPredictionCol ("prediction")
           .setMetricName ("accuracy")
-
       case "regression" =>
         new RegressionEvaluator()
           .setLabelCol ("indexedLabel")
@@ -272,9 +266,7 @@ class GBDTKernel {
           .setMetricName ("rmse")
     }
     val res = evaluator.evaluate(predictions)
-
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
-
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -307,7 +299,6 @@ class GBDTKernel {
       case "rdd" => gbdt.run(trainingLabelPositive)
       case "javardd" => gbdt.run(trainingLabelPositive.toJavaRDD)
     }
-
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
 
     val testData = MLUtils.loadLibSVMFile(sc, params.testDataPath).repartition(params.numPartitions)
@@ -316,7 +307,6 @@ class GBDTKernel {
     } else {
       LabeledPoint(i.label, i.features)
     })
-
     val labeleAndPreds = testLabelPositive.map{ point =>
       val prediction = model.predict(point.features)
       (point.label, prediction)
@@ -325,8 +315,7 @@ class GBDTKernel {
       case "classification" => labeleAndPreds.filter(r => r._1 == r._2).count.toDouble / testLabelPositive.count()
       case "regression" => math.sqrt(labeleAndPreds.map{ case(v, p) => math.pow((v - p), 2)}.mean())
     }
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
-
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 }

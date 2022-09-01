@@ -1,19 +1,15 @@
 package com.bigdata.ml
-import java.io.{File, FileWriter, PrintWriter}
-import java.nio.file.{Paths, Files}
-import scala.io.Source
-import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.ml.Pipeline
+
+import com.bigdata.utils.Utils
+import com.bigdata.compare.ml.EvaluationVerify
+
 import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
-
-import scala.beans.BeanProperty
-import java.util
-import com.bigdata.utils.Utils
-import com.bigdata.compare.ml.EvaluationVerify
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.ml.Pipeline
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.ml.classification.RandomForestClassifier
 import org.apache.spark.ml.evaluation.{MulticlassClassificationEvaluator, RegressionEvaluator}
@@ -26,6 +22,12 @@ import org.apache.spark.mllib.tree.configuration.{Algo, Strategy}
 import org.apache.spark.mllib.tree.impurity.{Gini, Variance}
 import org.apache.spark.mllib.util.MLUtils
 import org.apache.spark.storage.StorageLevel
+
+import java.io.{File, FileWriter, PrintWriter}
+import java.nio.file.{Paths, Files}
+import java.util
+import scala.beans.BeanProperty
+import scala.io.Source
 
 class RFConfig extends Serializable {
   @BeanProperty var rf: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, Object]]]]] = _
@@ -66,7 +68,7 @@ class RFParams extends Serializable {
 object RFRunner {
   def main(args: Array[String]): Unit = {
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (algorithmType, dataStructure, datasetName, apiName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4), modelConfSplit(5))
       val dataPath = args(1)
@@ -276,17 +278,14 @@ class RFKernel {
       case "fit3" => pipeline.fit(trainingData, firstParamPair, otherParamPairs_1st, otherParamPairs_2nd)
 
     }
-
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
 
     val testData = reader
       .load(testDataPath)
       .repartition(genericPt)
       .persist(StorageLevel.MEMORY_AND_DISK_SER)
-
     // Make predictions.
     val predictions = model.transform(testData)
-
     // Select (prediction, true label) and compute test error.
     val evaluator = params.algorithmType match {
       case "classification" =>
@@ -294,7 +293,6 @@ class RFKernel {
           .setLabelCol ("indexedLabel")
           .setPredictionCol ("prediction")
           .setMetricName ("accuracy")
-
       case "regression" =>
         new RegressionEvaluator()
           .setLabelCol ("indexedLabel")
@@ -302,7 +300,7 @@ class RFKernel {
           .setMetricName ("rmse")
     }
     val res = evaluator.evaluate(predictions)
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -341,7 +339,6 @@ class RFKernel {
       LabeledPoint (i.label, i.features)
     })
 
-
     val model = params.algorithmType match {
       case "classification" =>
         val seed = "org.apache.spark.ml.classification.RandomForestClassifier".hashCode
@@ -377,9 +374,7 @@ class RFKernel {
             RandomForest.trainRegressor(trainingLabelPositive.toJavaRDD, categoricalFeaturesInfo,
               numTrees, featureSubsetStrategy, "variance", maxDepth, maxBins, seed)
         }
-
     }
-
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
 
     val testData = MLUtils.loadLibSVMFile(sc, testDataPath)
@@ -390,7 +385,6 @@ class RFKernel {
     } else {
       LabeledPoint (i.label, i.features)
     })
-
     val labeleAndPreds = testLabelPositive.map{ point =>
       val prediction = model.predict(point.features)
       (point.label, prediction)
@@ -399,8 +393,7 @@ class RFKernel {
       case "classification" => 1.0 - labeleAndPreds.filter(r => r._1 == r._2).count.toDouble / testLabelPositive.count()
       case "regression" => math.sqrt(labeleAndPreds.map{ case(v, p) => math.pow((v - p), 2)}.mean())
     }
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
-
 }

@@ -20,17 +20,6 @@ object EvaluationVerify {
 
   }
 
-  def saveRes(res: Double, savePath: String, sc: SparkContext): Unit ={
-    val result = new Array[String](1)
-    result(0) = res.toString
-    val fs = FileSystem.get(sc.hadoopConfiguration)
-    val saveFile = new Path(savePath)
-    if (fs.exists(saveFile)) {
-      fs.delete(saveFile, true)
-    }
-    sc.parallelize(result).repartition(1).saveAsTextFile(savePath)
-  }
-
   def compareRes(path0: String, path1: String, spark: SparkSession): String = {
     val sc = spark.sparkContext
     val fs = FileSystem.get(sc.hadoopConfiguration)

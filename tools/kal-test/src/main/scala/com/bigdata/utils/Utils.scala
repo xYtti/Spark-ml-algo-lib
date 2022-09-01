@@ -1,16 +1,15 @@
 package com.bigdata.utils
 
 import org.apache.hadoop.fs.{FileSystem, Path}
-
-import java.io.{File, FileInputStream, InputStreamReader, PrintWriter}
-import java.nio.charset.StandardCharsets
-import java.text.SimpleDateFormat
-import java.util.{Date, TimeZone}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.mllib.linalg._
 import org.apache.spark.rdd.RDD
 
+import java.io.{File, FileInputStream, InputStreamReader, PrintWriter}
+import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.{Date, TimeZone}
 import java.nio.file.{Files, Paths}
 import scala.io.Source
 
@@ -32,7 +31,7 @@ object Utils {
 
     inputStreamReader
 
-    }
+  }
 
   /**
    *
@@ -52,6 +51,17 @@ object Utils {
       val mkdir = folder.mkdirs()
       println(s"Create dir report ${mkdir}")
     }
+  }
+
+  def saveEvaluation(res: Double, savePath: String, sc: SparkContext): Unit ={
+    val result = new Array[String](1)
+    result(0) = res.toString
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val saveFile = new Path(savePath)
+    if (fs.exists(saveFile)) {
+      fs.delete(saveFile, true)
+    }
+    sc.parallelize(result).repartition(1).saveAsTextFile(savePath)
   }
 
   def compareDoubleResults(saveDataPath: String, verifiedDataPath: String): String = {
@@ -74,10 +84,10 @@ object Utils {
   }
 
   /**
-    *  Convert DenseMatrix to 2-dimension array, stored in row major
-    * @param matrix Input matrix
-    * @return 2-dimension array, stored in row major
-    */
+   *  Convert DenseMatrix to 2-dimension array, stored in row major
+   * @param matrix Input matrix
+   * @return 2-dimension array, stored in row major
+   */
   def toRowMajorArray(matrix: DenseMatrix): Array[Array[Double]] = {
     val nRow = matrix.numRows
     val nCol = matrix.numCols
@@ -132,4 +142,4 @@ object Utils {
     true
   }
 
-  }
+}
