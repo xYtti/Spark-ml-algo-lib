@@ -168,7 +168,7 @@ class KMeansKernel {
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
     params.setLoadDataTime(loadDataTime)
     val res = model.computeCost(trainingData)
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -193,7 +193,7 @@ class KMeansKernel {
 
     params.setLoadDataTime(loadDataTime)
     val res = model.computeCost(dataRDD)
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 }

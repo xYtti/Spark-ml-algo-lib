@@ -3,8 +3,8 @@ set -e
 
 case "$1" in
 -h | --help | ?)
-  echo "Usage: <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. glove"
+  echo "Usage: <dataset name> <isRaw>"
+  echo "1st argument: name of dataset: e.g. glove/gist/deep1b"
   echo "2th argument: optimization algorithm or raw: [no/yes]"
   echo "if u want to compare result, pls execute {./bin/compare/ml/KNNVerify.sh <dataset_name>} "
   exit 0
@@ -12,8 +12,8 @@ case "$1" in
 esac
 
 if [ $# -ne 2 ]; then
-  echo "please input 3 argument: <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. glove"
+  echo "please input 2 argument: <dataset name> <isRaw>"
+  echo "1st argument: name of dataset: e.g. glove/gist/deep1b"
   echo "2th argument: optimization algorithm or raw: [no/yes]"
   echo "if u want to compare result, pls execute {./bin/compare/ml/KNNVerify.sh <dataset_name>} "
   exit 0

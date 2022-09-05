@@ -4,7 +4,7 @@ set -e
 case "$1" in
 -h | --help | ?)
   echo "Usage: <dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. mnist8m"
+  echo "1st argument: name of dataset: e.g. mnist8m/Twitter/rcv"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"
@@ -13,8 +13,8 @@ case "$1" in
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 2 arguments:<dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. mnist8m"
+  echo "please input 4 arguments:<dataset name> <api name> <isRaw> <isCheck>"
+  echo "1st argument: name of dataset: e.g. mnist8m/Twitter/rcv"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"

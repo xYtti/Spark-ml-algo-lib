@@ -242,8 +242,7 @@ class ALSKernel {
       println("Mean Squared Error = " + p)
       p
     }
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
-
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 
@@ -292,7 +291,7 @@ class ALSKernel {
       println("Mean Squared Error = " + p)
       p
     }
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 

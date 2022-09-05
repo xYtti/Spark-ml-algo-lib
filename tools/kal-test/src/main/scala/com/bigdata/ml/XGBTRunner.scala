@@ -196,7 +196,7 @@ class XGBTKernel {
     println(s"Test Error =  ${(1.0-res)}")
     val costTime = (fitEndTime-start_time)/1000.0
     predictions.select("prediction","label","features").show(5)
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 

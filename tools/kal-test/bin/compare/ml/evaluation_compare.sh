@@ -6,6 +6,7 @@ case "$1" in
   echo "Usage: <path0> <path1>"
   echo "1st argument: path of 1st result: eg [hdfs:///tmp/ml/result/RF/classification_epsilon_dataframe_fit1]"
   echo "2nd argument: path of 2nd result: eg [hdfs:///tmp/ml/result/RF/classification_epsilon_dataframe_fit1_raw]"
+  echo "Applicable to algorithm ALS DT GBDT IDF KMeans LDA LinR LogR RF SVM XGBT"
   exit 0
   ;;
 esac
@@ -14,6 +15,7 @@ if [ $# -ne 2 ]; then
   echo "Usage: <path0> <path1>"
   echo "1st argument: path of 1st result: eg [hdfs:///tmp/ml/result/RF/classification_epsilon_dataframe_fit1]"
   echo "2nd argument: path of 2nd result: eg [hdfs:///tmp/ml/result/RF/classification_epsilon_dataframe_fit1_raw]"
+  echo "Applicable to algorithm ALS DT GBDT IDF KMeans LDA LinR LogR RF SVM XGBT"
   exit 0
 fi
 

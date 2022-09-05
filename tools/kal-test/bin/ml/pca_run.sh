@@ -5,7 +5,7 @@ case "$1" in
 -h | --help | ?)
   echo "Usage: <data structure> <dataset name> <api name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
-  echo "2nd argument: name of dataset: e.g. D10M1K"
+  echo "2nd argument: name of dataset: e.g. D10M1K/D1M10K/MESH"
   echo "3rd argument: name of API:[for dataframe: fit/fit1/fit2/fit3; for rdd: train]"
   echo "4th argument: optimization algorithm or raw: [no/yes]"
   echo "5th argument: Whether to Compare Results [no/yes]"
@@ -16,7 +16,7 @@ esac
 if [ $# -ne 5 ]; then
   echo "please input 3 arguments: <data structure> <dataset name> <api name>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
-  echo "2nd argument: name of dataset: e.g. D10M1K"
+  echo "2nd argument: name of dataset: e.g. D10M1K/D1M10K/MESH"
   echo "3rd argument: name of API:[for dataframe: fit/fit1/fit2/fit3; for rdd: train]"
   echo "4th argument: optimization algorithm or raw: [no/yes]"
   echo "5th argument: Whether to Compare Results [no/yes]"
@@ -135,6 +135,6 @@ else
   --conf "spark.driver.maxResultSize=256G" \
   --conf "spark.executor.memoryOverhead=${executor_memory_overhead_val}" \
   --conf "spark.executor.extraJavaOptions=${extra_java_options_val}" \
-    --driver-class-path "lib/snakeyaml-1.19.jar" \
+  --driver-class-path "lib/snakeyaml-1.19.jar" \
   ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 fi

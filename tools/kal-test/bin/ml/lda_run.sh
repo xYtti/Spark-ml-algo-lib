@@ -13,8 +13,8 @@ case "$1" in
   ;;
 esac
 
-if [ $# -ne 3 ]; then
-  echo "please input 3 arguments: <data structure> <dataset name> <api name> <isRaw> <isCheck>"
+if [ $# -ne 5 ]; then
+  echo "please input 5 arguments: <data structure> <dataset name> <api name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. nytimes/pubmed/D20M200K"
   echo "3rd argument: name of API: e.g. fit/fit1/fit2/fit3/run"

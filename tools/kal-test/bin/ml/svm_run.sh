@@ -4,7 +4,7 @@ set -e
 case "$1" in
 -h | --help | ?)
   echo "Usage: <dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. 10M4096"
+  echo "1st argument: name of dataset: e.g. 10M4096/D280M118/D40M1K"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"
@@ -14,7 +14,7 @@ esac
 
 if [ $# -ne 4 ]; then
   echo "please input 4 arguments: <dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. 10M4096"
+  echo "1st argument: name of dataset: e.g. 10M4096/D280M118/D40M1K"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"
@@ -25,7 +25,7 @@ source conf/ml/svm/svm_spark.properties
 
 dataset_name=$1
 api_name=$2
-api_name=3
+api_name=$3
 is_raw=$4
 
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')

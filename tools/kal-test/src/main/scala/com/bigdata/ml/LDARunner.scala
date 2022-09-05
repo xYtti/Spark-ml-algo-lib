@@ -241,7 +241,7 @@ class LDAKernel {
     println("Predict costTime: " + (predictTime))
 
     testData.unpersist()
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     spark.close()
     res
   }
@@ -274,7 +274,7 @@ class LDAKernel {
 
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
     trainingData.unpersist()
-    EvaluationVerify.saveRes(0.0, params.saveDataPath, sc)
+    Utils.saveEvaluation(0.0, params.saveDataPath, sc)
     spark.close()
     costTime
   }

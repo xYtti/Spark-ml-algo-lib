@@ -13,7 +13,7 @@ object EvaluationVerify {
     val sparkConf =  new SparkConf().setAppName("EvaluationVerify")
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
     val isCorrect = compareRes(path0, path1, spark)
-    val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
+    val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
     writerIsCorrect.write(s"${isCorrect}:\n${path0}\n${path1}\n")
     writerIsCorrect.close()
     println(s"${isCorrect}!")

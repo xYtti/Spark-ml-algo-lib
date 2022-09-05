@@ -229,9 +229,7 @@ class LinRKernel {
       .select("squaredError").summary("mean")
 
     val res = predictions.select("squaredError").first().getString(0).toDouble
-
-    EvaluationVerify.saveRes(res, params.saveDataPath, sc)
-
+    Utils.saveEvaluation(res, params.saveDataPath, sc)
     (res, costTime)
   }
 }

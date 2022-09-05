@@ -11,8 +11,8 @@ case "$1" in
   ;;
 esac
 
-if [ $# -ne 2 ]; then
-  echo "please input 2 arguments:<dataset name> <isRaw>"
+if [ $# -ne 3 ]; then
+  echo "please input 3 arguments:<dataset name> <isRaw>"
   echo "1st argument: name of dataset: e.g. simrank3w"
   echo "2nd argument: optimization algorithm or raw: [no/yes]"
   echo "3th argument: Whether to Compare Results [no/yes]"

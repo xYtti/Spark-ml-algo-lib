@@ -4,7 +4,7 @@ set -e
 case "$1" in
 -h | --help | ?)
   echo "Usage: <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. D10M1K"
+  echo "1st argument: name of dataset: e.g. D10M1K/D1M10K/MESH/RUCCI"
   echo "2nd argument: optimization algorithm or raw: [no/yes]"
   echo "3rd argument: Whether to Compare Results [no/yes]"
   exit 0
@@ -13,7 +13,7 @@ esac
 
 if [ $# -ne 3 ]; then
   echo "please input 1 argument: <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. D10M1K"
+  echo "1st argument: name of dataset: e.g. D10M1K/D1M10K/MESH/RUCCI"
   echo "2nd argument: optimization algorithm or raw: [no/yes]"
   echo "3rd argument: Whether to Compare Results [no/yes]"
   exit 0
