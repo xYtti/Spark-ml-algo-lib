@@ -13,7 +13,8 @@ The Kunpeng algorithm library test tool can be used to test machine learning and
 #### Procedure
 1.  Go to the Spark-ml-algo-lib/tools/kal-test directory in the compilation environment.
 2.  Install the dependencies.<br/>
-    mvn install:install-file -DgroupId=org.apache.spark.graphx.lib -DartifactId=boostkit-graph-kernel-client_2.11 -Dversion=2.1.0 -Dfile=lib/boostkit-graph-kernel-client_2.11-1.2.0.jar -Dpackaging=jar**_
+    mvn install:install-file -DgroupId=org.apache.spark.graphx.lib -DartifactId=boostkit-graph-kernel-client_2.11 -Dversion=2.1.0 -Dclassifier=spark2.3.2 -Dfile=lib/boostkit-graph-kernel-client_2.11-2.1.0-spark2.3.2.jar -Dpackaging=jar**_
+    mvn install:install-file -DgroupId=org.apache.spark -DartifactId=boostkit-ml-kernel-client_2.11 -Dversion=2.1.0 -Dclassifier=spark2.3.2 -Dfile=lib/boostkit-ml-kernel-client_2.11-2.1.0-spark2.3.2.jar -Dpackaging=jar**_
 3.  Run the compile command:<br/>
     mvn clean install -DskipTests_**
 4.  View the kal-test_2.11-0.1.jar file generated in Spark-ml-algo-lib/tools/kal-test/target.
