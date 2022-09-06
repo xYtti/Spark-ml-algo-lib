@@ -1,19 +1,13 @@
 package com.bigdata.ml
 import java.io.{File, FileWriter}
 
-import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.ml.Pipeline
-import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
-import org.yaml.snakeyaml.constructor.Constructor
-import org.yaml.snakeyaml.nodes.Tag
-import org.yaml.snakeyaml.representer.Representer
-
-import scala.beans.BeanProperty
-import java.util
 
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.EvaluationVerify
+
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.evaluation.{MulticlassClassificationEvaluator, RegressionEvaluator}
 import org.apache.spark.ml.feature.StringIndexer
@@ -23,6 +17,13 @@ import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.DecisionTree
 import org.apache.spark.mllib.util.MLUtils
 import org.apache.spark.storage.StorageLevel
+import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
+import org.yaml.snakeyaml.constructor.Constructor
+import org.yaml.snakeyaml.nodes.Tag
+import org.yaml.snakeyaml.representer.Representer
+
+import scala.beans.BeanProperty
+import java.util
 
 class DTConfig extends Serializable {
   @BeanProperty var dt: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, Object]]]]] = _

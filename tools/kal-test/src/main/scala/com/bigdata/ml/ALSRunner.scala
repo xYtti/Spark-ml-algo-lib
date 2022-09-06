@@ -1,11 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util
-import scala.beans.BeanProperty
-import scala.collection.mutable
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.EvaluationVerify
+
 import org.apache.spark.ml.recommendation.ALS
 import org.apache.spark.mllib.recommendation.Rating
 import org.apache.spark.mllib.linalg.SparseVector
@@ -18,6 +15,11 @@ import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
+
+import java.io.{File, FileWriter}
+import java.util
+import scala.beans.BeanProperty
+import scala.collection.mutable
 
 class ALSConfig extends Serializable {
   @BeanProperty var als: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, Object]]]] = _

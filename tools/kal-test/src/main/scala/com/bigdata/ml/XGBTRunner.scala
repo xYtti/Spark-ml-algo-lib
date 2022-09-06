@@ -2,20 +2,20 @@ package com.bigdata.ml
 
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.EvaluationVerify
+
 import ml.dmlc.xgboost4j.scala.spark.{XGBoostClassifier, XGBoostRegressor}
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.evaluation.{MulticlassClassificationEvaluator, RegressionEvaluator}
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.apache.spark.storage.StorageLevel
-
 import org.yaml.snakeyaml.{DumperOptions,TypeDescription,Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
+import java.util
 import java.io.{File, FileWriter, PrintWriter, StringWriter}
 import scala.beans.BeanProperty
-import java.util
 
 class XGBTConfig extends Serializable{
   @BeanProperty var xgbt: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String,Object]]]]]=_

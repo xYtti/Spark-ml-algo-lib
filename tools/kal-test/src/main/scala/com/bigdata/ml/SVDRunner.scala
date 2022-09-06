@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter, PrintWriter}
-import java.util
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.SVDVerify
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.mllib.linalg.{DenseMatrix, DenseVector, SparseVector, Vector, Vectors}
@@ -16,6 +15,8 @@ import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 import breeze.linalg.{scale, DenseMatrix => BDM, DenseVector => BDV, norm => brzNorm}
 
+import java.io.{File, FileWriter, PrintWriter}
+import java.util
 import scala.beans.BeanProperty
 
 class SVDConfig extends Serializable {

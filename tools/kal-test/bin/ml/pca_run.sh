@@ -14,7 +14,7 @@ case "$1" in
 esac
 
 if [ $# -ne 5 ]; then
-  echo "please input 3 arguments: <data structure> <dataset name> <api name>"
+  echo "please input 5 arguments: <data structure> <dataset name> <api name>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. D10M1K/D1M10K/MESH"
   echo "3rd argument: name of API:[for dataframe: fit/fit1/fit2/fit3; for rdd: train]"
@@ -122,7 +122,6 @@ if [ ${is_raw} == "no" ]; then
   --conf "spark.executor.extraClassPath=/opt/ml_classpath/fastutil-8.3.1.jar:/opt/ml_classpath/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 else
-  spark-submit \
   spark-submit \
   --class com.bigdata.ml.PCARunner \
   --deploy-mode ${deploy_mode_val} \

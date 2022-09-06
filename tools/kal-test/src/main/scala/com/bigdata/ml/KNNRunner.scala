@@ -1,9 +1,7 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter, PrintWriter}
-import java.util
-
 import com.bigdata.utils.Utils
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.neighbors.KNN
@@ -13,6 +11,8 @@ import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
+import java.io.{File, FileWriter, PrintWriter}
+import java.util
 import scala.beans.BeanProperty
 
 class KNNConfig extends Serializable {
@@ -116,7 +116,7 @@ object KNNRunner {
       params.setCostTime(costTime)
 
       Utils.checkDirs("report")
-      val writer = new FileWriter(s"report/knn_${
+      val writer = new FileWriter(s"report/${params.testcaseType}_${
         Utils.getDateStrFromUTC("yyyyMMdd_HHmmss",
           System.currentTimeMillis())
       }.yml")

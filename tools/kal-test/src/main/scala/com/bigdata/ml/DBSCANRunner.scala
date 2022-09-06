@@ -1,6 +1,7 @@
 package org.apache.spark.ml.clustering
 
 import com.bigdata.utils.Utils
+
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.linalg.{VectorUDT, Vectors}
 import org.apache.spark.sql.{Row, SparkSession}

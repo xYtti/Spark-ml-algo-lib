@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter, PrintWriter}
-import java.util.HashMap
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.MatrixVerify
+
 import org.apache.spark.ml.feature.{PCA => MLPCA}
 import org.apache.spark.ml.linalg.{Vectors => MLVectors}
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
@@ -23,6 +22,8 @@ import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
 import java.util
+import java.io.{File, FileWriter, PrintWriter}
+import java.util.HashMap
 import scala.beans.BeanProperty
 
 class PCAConfig extends Serializable {

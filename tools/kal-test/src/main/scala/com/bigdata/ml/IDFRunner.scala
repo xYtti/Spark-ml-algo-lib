@@ -2,6 +2,7 @@ package com.bigdata.ml
 
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.IDFVerify
+
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Encoders, SparkSession}
@@ -12,6 +13,7 @@ import org.yaml.snakeyaml.representer.Representer
 import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
+
 import java.io.{File, FileInputStream, FileOutputStream, FileWriter, ObjectInputStream, ObjectOutputStream}
 import java.util
 import scala.beans.BeanProperty

@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.MatrixVerify
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.feature.SPCA
@@ -18,6 +17,8 @@ import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
+import java.io.{File, FileWriter}
+import java.util
 import scala.beans.BeanProperty
 
 class SPCAConfig extends Serializable {

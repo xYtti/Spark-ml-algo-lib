@@ -2,6 +2,7 @@ package com.bigdata.ml
 
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.MatrixVerify
+
 import org.apache.spark.SparkConf
 import org.apache.spark.ml
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType

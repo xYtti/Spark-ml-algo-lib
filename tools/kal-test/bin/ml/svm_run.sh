@@ -30,7 +30,7 @@ is_raw=$4
 
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 
-model_conf=${dataset_name}_${api_name}_${is_raw}_${if_check}
+model_conf=${dataset_name}-${api_name}-${is_raw}-${if_check}
 
 # concatnate strings as a new variable
 num_executors=${cpu_name}"_numExectuors"
@@ -92,7 +92,7 @@ ssh agent2 "echo 3 > /proc/sys/vm/drop_caches"
 ssh agent3 "echo 3 > /proc/sys/vm/drop_caches"
 sleep 30
 
-echo "start to submit spark jobs --- rf-${model_conf}"
+echo "start to submit spark jobs --- SVM-${model_conf}"
 if [ ${is_raw} == "no" ]; then
   scp lib/fastutil-8.3.1.jar lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar root@agent1:/opt/ml_classpath/
   scp lib/fastutil-8.3.1.jar lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar root@agent2:/opt/ml_classpath/
@@ -112,7 +112,7 @@ if [ ${is_raw} == "no" ]; then
   --jars "lib/fastutil-8.3.1.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   --driver-class-path "lib/kal-test_${scala_version_val}-0.1.jar:lib/fastutil-8.3.1.jar:lib/snakeyaml-1.19.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   --conf "spark.executor.extraClassPath=/opt/ml_classpath/fastutil-8.3.1.jar:/opt/ml_classpath/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val} | tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val} | tee ./log/log
 else
   spark-submit \
   --class com.bigdata.ml.SVMRunner \
@@ -127,5 +127,5 @@ else
   --jars "lib/fastutil-8.3.1.jar" \
   --driver-class-path "lib/snakeyaml-1.19.jar" \
   --conf "spark.executor.extraClassPath=fastutil-8.3.1.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val} | tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val} | tee ./log/log
 fi

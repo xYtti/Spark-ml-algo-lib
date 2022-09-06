@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util.HashMap
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.EvaluationVerify
+
 import org.apache.hadoop.io.LongWritable
 import org.apache.mahout.math.VectorWritable
 import org.apache.spark.ml.clustering.{KMeans => MlKMeans}
@@ -22,6 +21,8 @@ import org.yaml.snakeyaml.representer.Representer
 
 import java.util
 import scala.beans.BeanProperty
+import java.io.{File, FileWriter}
+import java.util.HashMap
 
 class KMeansConfig extends Serializable {
 

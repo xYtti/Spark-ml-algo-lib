@@ -129,5 +129,5 @@ else
   --conf "spark.executor.extraJavaOptions=${extra_java_options_val}" \
   --conf "spark.driver.maxResultSize=256G" \
   --driver-class-path "lib/snakeyaml-1.19.jar" \
-  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path} | tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val} | tee ./log/log
 fi

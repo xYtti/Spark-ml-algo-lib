@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util.HashMap
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.SimRankVerify
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.recommendation.ALS.Rating
@@ -14,6 +13,8 @@ import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
 import java.util
+import java.io.{File, FileWriter}
+import java.util.HashMap
 import scala.beans.BeanProperty
 
 class SimRankConfig extends Serializable {

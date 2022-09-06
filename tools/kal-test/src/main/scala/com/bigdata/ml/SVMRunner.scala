@@ -1,6 +1,8 @@
 package com.bigdata.ml
-import java.io.{File, FileWriter}
-import java.util.HashMap
+
+import com.bigdata.utils.Utils
+import com.bigdata.compare.ml.EvaluationVerify
+
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.param.{ParamMap, ParamPair}
@@ -10,10 +12,10 @@ import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
-import com.bigdata.utils.Utils
-import com.bigdata.compare.ml.EvaluationVerify
 
 import java.util
+import java.io.{File, FileWriter}
+import java.util.HashMap
 import scala.beans.BeanProperty
 
 class SVMConfig extends Serializable {
@@ -44,7 +46,7 @@ class SVMParams extends Serializable {
 object SVMRunner {
   def main(args: Array[String]): Unit = {
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (datasetName, apiName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3))
       val dataPath = args(1)

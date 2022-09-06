@@ -1,9 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util.HashMap
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.PrefixSpanVerify
+
 import io.airlift.compress.lz4.Lz4Codec
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.io.NullWritable
@@ -16,6 +15,8 @@ import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
 import java.util
+import java.io.{File, FileWriter}
+import java.util.HashMap
 import scala.beans.BeanProperty
 
 

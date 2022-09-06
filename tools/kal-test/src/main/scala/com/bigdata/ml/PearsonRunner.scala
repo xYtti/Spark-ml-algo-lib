@@ -1,10 +1,8 @@
 package com.bigdata.ml
 
-import java.io.{File, FileWriter}
-import java.util
-import scala.beans.BeanProperty
 import com.bigdata.utils.Utils
 import com.bigdata.compare.ml.MatrixVerify
+
 import org.apache.spark.ml.stat
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
 import org.apache.spark.mllib.linalg.{DenseMatrix, Matrix, Vector, Vectors}
@@ -20,6 +18,9 @@ import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
 import org.yaml.snakeyaml.representer.Representer
 
+import java.io.{File, FileWriter}
+import java.util
+import scala.beans.BeanProperty
 
 class PearsonConfig extends Serializable {
   @BeanProperty var pearson: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, Object]]]] = _
