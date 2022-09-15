@@ -54,7 +54,7 @@ class KMeansParams extends Serializable {
 object KMeansRunner {
   def main(args: Array[String]): Unit = {
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (dataStructure, datasetName, apiName, cpuName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4), modelConfSplit(5))
       val dataPath = args(1)

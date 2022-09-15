@@ -57,7 +57,7 @@ class LogRParams extends Serializable {
 object LogRRunner {
   def main(args: Array[String]): Unit = {
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (datasetName, apiName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3))
       val dataPath = args(1)

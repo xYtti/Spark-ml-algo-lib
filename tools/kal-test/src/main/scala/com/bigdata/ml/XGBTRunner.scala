@@ -57,7 +57,7 @@ object XGBTRunner {
   def main(args: Array[String]): Unit = {
     try{
       val modelConf = args(0)
-      val modelConfSplit = modelConf.split("_")
+      val modelConfSplit = modelConf.split("-")
       val (algorithmType, datasetName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3))
       val dataPath = args(1)

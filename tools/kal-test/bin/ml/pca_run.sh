@@ -32,7 +32,7 @@ api_name=$3
 is_raw=$4
 if_check=$5
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
-model_conf=${data_structure}_${dataset_name}_${api_name}_${is_raw}_${if_check}
+model_conf=${data_structure}-${dataset_name}-${api_name}-${is_raw}-${if_check}
 
 # concatnate strings as a new variable
 num_executors=${dataset_name}"_numExectuors_"${cpu_name}

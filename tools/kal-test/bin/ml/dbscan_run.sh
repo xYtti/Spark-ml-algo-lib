@@ -24,7 +24,7 @@ hdfsJarPath="hdfs:///tmp/ml/test/dbscan"
 dataset_name=$1
 is_raw=$2
 platform_name=$(lscpu | grep Architecture | awk '{print $2}')
-model_conf=${dataset_name}_${is_raw}
+model_conf=${dataset_name}-${is_raw}
 
 if [ ${is_raw} == "no" ]; then
   source conf/ml/dbscan/dbscan_spark.properties

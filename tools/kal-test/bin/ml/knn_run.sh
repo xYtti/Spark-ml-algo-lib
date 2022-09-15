@@ -25,7 +25,7 @@ source conf/ml/knn/knn_spark.properties
 dataset_name=$1
 is_raw=$2
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
-model_conf=${dataset_name}_${is_raw}
+model_conf=${dataset_name}-${is_raw}
 
 # concatnate strings as a new variable
 num_executors="numExectuors_"${dataset_name}_${cpu_name}

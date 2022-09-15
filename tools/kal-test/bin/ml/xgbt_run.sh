@@ -28,12 +28,9 @@ dataset_name=$1
 algorithm_type=$2
 is_raw=$3
 if_check=$4
-
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 
-
-
-model_conf=${algorithm_type}_${dataset_name}_${is_raw}_${if_check}
+model_conf=${algorithm_type}-${dataset_name}-${is_raw}-${if_check}
 
 # concatnate strings as a new variable
 num_executors=${cpu_name}_${algorithm_type}"_"${dataset_name}"_numExecutors"

@@ -56,7 +56,7 @@ object PrefixSpanRunner {
   def main(args: Array[String]): Unit = {
 
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (datasetName , isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2))
       val dataPath = args(1)

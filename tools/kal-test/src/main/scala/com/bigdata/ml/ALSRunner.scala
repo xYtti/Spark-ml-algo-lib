@@ -55,7 +55,7 @@ class ALSParams extends Serializable {
 object ALSRunner {
   def main(args: Array[String]): Unit = {
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (dataStructure, datasetName, apiName, isRaw, ifCheck) =
         (modelConfSplit(0), modelConfSplit(1), modelConfSplit(2), modelConfSplit(3), modelConfSplit(4))
       val dataPath = args(1)

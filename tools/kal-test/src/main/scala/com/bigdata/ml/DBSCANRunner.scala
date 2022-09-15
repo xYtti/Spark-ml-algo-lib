@@ -40,7 +40,7 @@ object DBSCANRunner {
   def main(args: Array[String]): Unit = {
 
     try {
-      val modelConfSplit = args(0).split("_")
+      val modelConfSplit = args(0).split("-")
       val (datasetName, platformName) = (modelConfSplit(0), modelConfSplit(1))
       val dataPath = args(1)
       val datasetCpuName = s"${datasetName}_${platformName}"
