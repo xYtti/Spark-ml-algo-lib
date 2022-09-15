@@ -26,7 +26,7 @@ pca:
       dataFormat: coo
       sep: " "
 
- raw:
+  raw:
     D10M1K:
       numPartitions: 236
       k: 500
