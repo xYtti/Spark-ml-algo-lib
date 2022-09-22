@@ -7,9 +7,9 @@ ps:
       minSupport: 0.001
       maxPatternLength: 10
       maxLocalProjDBSize: 100000000
-      localTimeout: 15
-      filterCandidates: true
-      projDBstep: 10
+      localTimeout: '15'
+      filterCandidates: 'true'
+      projDBstep: '10'
       redistributeData: true
 
     IBM10M47:
@@ -17,9 +17,9 @@ ps:
       minSupport: 0.002
       maxPatternLength: 10
       maxLocalProjDBSize: 10000000
-      localTimeout: 70
-      filterCandidates: true
-      projDBstep: 10
+      localTimeout: '70'
+      filterCandidates: 'true'
+      projDBstep: '10'
       redistributeData: false
 
     IBM100M47:
@@ -27,9 +27,9 @@ ps:
       minSupport: 0.0021
       maxPatternLength: 10
       maxLocalProjDBSize: 100000000
-      localTimeout: 70
-      filterCandidates: true
-      projDBstep: 10
+      localTimeout: '70'
+      filterCandidates: 'true'
+      projDBstep: '10'
       redistributeData: false
 
   raw:

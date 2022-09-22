@@ -42,7 +42,7 @@ class LogRParams extends Serializable {
   @BeanProperty var apiName: String = _
   @BeanProperty var datasetName: String = _
   @BeanProperty var cpuName: String = _
-  @BeanProperty var isRaw: String = "no"
+  @BeanProperty var isRaw: String = _
   @BeanProperty var evaluation: Double = _
   @BeanProperty var costTime: Double = _
   @BeanProperty var loadDataTime: Double = _
@@ -101,7 +101,7 @@ object LogRRunner {
       params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}")
       params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${datasetName}_${apiName}"
-      if (cpuName.equals("raw")){
+      if (isRaw.equals("yes")){
         appName = s"${params.algorithmName}_${datasetName}_${apiName}_raw"
         params.setVerifiedDataPath(params.saveDataPath)
         params.setSaveDataPath(s"${params.saveDataPath}_raw")

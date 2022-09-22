@@ -144,6 +144,6 @@ else
   --conf "spark.executor.memory_overhead=${memory_overhead_val}" \
   --conf "spark.driver.maxResultSize=256G" \
   --conf "spark.rdd.compress=${compress_val}" \
-  --driver-class-path "lib/snakeyaml-1.19.jar:lib/fastutil-8.3.1.jar" \
+  --driver-class-path "lib/snakeyaml-1.19.jar:lib/fastutil-8.3.1.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${spark_conf} ${save_resultPath_val}| tee ./log/log
 fi

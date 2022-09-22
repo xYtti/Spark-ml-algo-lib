@@ -8,11 +8,10 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.{Encoders, SparkSession}
 import org.apache.spark.ml.linalg.Vector
 import org.apache.spark.ml.feature.{IDF, IDFModel}
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.representer.Representer
 import org.yaml.snakeyaml.{DumperOptions, TypeDescription, Yaml}
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.nodes.Tag
+import org.yaml.snakeyaml.representer.Representer
 
 import java.io.{File, FileInputStream, FileOutputStream, FileWriter, ObjectInputStream, ObjectOutputStream}
 import java.util

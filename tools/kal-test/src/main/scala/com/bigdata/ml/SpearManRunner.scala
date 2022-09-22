@@ -6,9 +6,10 @@ import com.bigdata.compare.ml.MatrixVerify
 import org.apache.spark.SparkConf
 import org.apache.spark.ml
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
-import org.apache.spark.mllib.linalg.{DenseMatrix, Matrix, Vector, Vectors}
+import org.apache.spark.ml.linalg.{Matrix, Vectors, Vector}
+import org.apache.spark.mllib.linalg.DenseMatrix
 import org.apache.spark.mllib
-import org.apache.spark.mllib.linalg.{Vector => OldVector, Vectors => OldVectors}
+import org.apache.spark.mllib.linalg.{Vectors => OldVectors}
 import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.sql.types.{StructField, StructType}
 import org.apache.spark.storage.StorageLevel
@@ -83,6 +84,7 @@ object SpearManRunner {
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("SpearMan")
       params.setSaveDataPath(s"${params.algorithmName}/${params.algorithmName}/${datasetName}_${dataStructure}")
+      params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${dataStructure}_${datasetName}"
       if (isRaw.equals("yes")){
         appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_raw"
@@ -143,9 +145,10 @@ class SpearManKernel {
     val mat_df = ml.stat.Correlation.corr(data,"matrix", method = "spearman")
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
 
-    val result = mat_df.collect()(0).getAs[Matrix](0).toArray
+    val mat = mat_df.collect()(0).getAs[Matrix](0)
+    val result = mat.toArray
     val result_avg = result.sum/result.length
-    val spearManMat = mat_df.collect()(0).getAs[DenseMatrix](0)
+    val spearManMat = new DenseMatrix(mat.numRows, mat.numCols, mat.toArray, mat.isTransposed)
 
 
     MatrixVerify.saveMatrix(spearManMat, params.saveDataPath, sc)
@@ -167,8 +170,8 @@ class SpearManKernel {
       StructType(List(StructField("matrix", VectorType)))
     ).persist(StorageLevel.MEMORY_ONLY)
 
-    val rdd: RDD[Vector] = data.select("matrix").rdd.map{
-      case Row(v: Vector) => OldVectors.fromML(v.asML)
+    val rdd = data.select("matrix").rdd.map{
+      case Row(v: Vector) => OldVectors.fromML(v)
     }
     val mat_rdd = mllib.stat.Statistics.corr(rdd, method = "spearman")
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0

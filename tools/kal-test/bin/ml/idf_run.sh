@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-ifRaw="opt"
 case "$1" in
 -h | --help | ?)
   echo "Usage: <dataset name> <isRaw> <isCheck>"
@@ -105,8 +104,8 @@ if [ ${is_raw} == "no" ]; then
   --executor-memory ${executor_memory_val} \
   --conf spark.executor.extraJavaOptions=${executor_extra_java_options_val} \
   --driver-java-options "-Xms15g" \
-  --driver-class-path "lib/json4s-ext_2.11-3.2.11.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  --jars "lib/json4s-ext_2.11-3.2.11.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
+  --driver-class-path "lib/snakeyaml-1.19.jar:lib/json4s-ext_2.11-3.2.11.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
+  --jars "lib/snakeyaml-1.19.jar,lib/json4s-ext_2.11-3.2.11.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 else
   spark-submit \
@@ -120,6 +119,7 @@ else
   --executor-memory ${executor_memory_val} \
   --conf spark.executor.extraJavaOptions=${executor_extra_java_options_val} \
   --driver-java-options "-Xms15g" \
-  --jars "lib/json4s-ext_2.11-3.2.11.jar,lib/fastutil-8.3.1.jar" \
+  --driver-class-path "lib/snakeyaml-1.19.jar" \
+  --jars "lib/snakeyaml-1.19.jar,lib/json4s-ext_2.11-3.2.11.jar,lib/fastutil-8.3.1.jar" \
   ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 fi

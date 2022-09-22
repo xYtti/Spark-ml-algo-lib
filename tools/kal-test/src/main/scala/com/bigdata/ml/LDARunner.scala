@@ -101,6 +101,7 @@ object LDARunner {
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("LDA")
       params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}_${dataStructure}_${apiName}")
+      params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_${apiName}"
       if (isRaw.equals("yes")){
         appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_${apiName}_raw"
@@ -116,8 +117,8 @@ object LDARunner {
           val (trainModel, dataFrameCostTime) = new LDAKernel().runDataFrameJob(spark, params)
           val confPredict = new SparkConf()
             .setAppName(s"LDA_${dataStructure}_${datasetName}_${apiName}_${cpuName}_predict").set("spark.task.cpus", "1")
-          val sparkPredict = SparkSession.builder.config(confPredict).getOrCreate()
-          val dataFrameRes = new LDAKernel().runPredictJob(sparkPredict, params, trainModel)
+          //val sparkPredict = SparkSession.builder.config(confPredict).getOrCreate()
+          val dataFrameRes = new LDAKernel().runPredictJob(spark, params, trainModel)
           (dataFrameRes, dataFrameCostTime)
         }
         case "rdd" => (0.0, new LDAKernel().runRDDJob(spark, params))
@@ -202,7 +203,7 @@ class LDAKernel {
     println("load and train costTime: " + costTime)
 
     trainingData.unpersist()
-    spark.close()
+    //spark.close()
     (model, costTime)
   }
 
@@ -242,8 +243,8 @@ class LDAKernel {
     println("Predict costTime: " + (predictTime))
 
     testData.unpersist()
-    Utils.saveEvaluation(res, params.saveDataPath, sc)
-    spark.close()
+    var result = new java.math.BigDecimal(res)
+    Utils.saveLDARes(result, params.saveDataPath, sc)
     res
   }
 
@@ -276,7 +277,6 @@ class LDAKernel {
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
     trainingData.unpersist()
     Utils.saveEvaluation(0.0, params.saveDataPath, sc)
-    spark.close()
     costTime
   }
 }

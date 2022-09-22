@@ -34,7 +34,6 @@ class SPCAParams extends Serializable {
   @BeanProperty var numCols: Int = _
   @BeanProperty var pcPath: String = _
   @BeanProperty var sigmaPath: String = _
-  @BeanProperty var saveRes: Boolean = _
 
   @BeanProperty var dataPath: String = _
   @BeanProperty var apiName: String = _
@@ -85,7 +84,6 @@ object SPCARunner {
       params.setNumCols(paramsMap.getOrDefault("numCols", "0").asInstanceOf[Int])
       params.setPcPath(paramsMap.getOrDefault("pcPath", null.asInstanceOf[String]).asInstanceOf[String])
       params.setSigmaPath(paramsMap.getOrDefault("sigmaPath", null.asInstanceOf[String]).asInstanceOf[String])
-      params.setSaveRes(paramsMap.getOrDefault("saveRes", "false").asInstanceOf[Boolean])
       params.setDataPath(dataPath)
       params.setDatasetName(datasetName)
       params.setApiName(apiName)
@@ -175,10 +173,9 @@ class SPCAKernel {
     val loadDataTime = (System.currentTimeMillis() - startTime) / 1000.0
     params.setLoadDataTime(loadDataTime)
 
-    val spca = if (params.isRaw == "no"){
-      new SPCA().setK(params.k).setInputCol("matrix")
-    } else {
-      new PCA().setK(params.k).setInputCol("matrix")
+    val spca = params.isRaw match {
+      case "yes" => new PCA().setK(params.k).setInputCol("matrix")
+      case "no" => new SPCA().setK(params.k).setInputCol("matrix")
     }
 
     val paramMap = ParamMap(spca.k -> params.k)
@@ -201,7 +198,7 @@ class SPCAKernel {
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
     params.setLoadDataTime(costTime)
 
-    val spcaMat = model.pc.asInstanceOf[DenseMatrix]
+    val spcaMat = new DenseMatrix(model.pc.numRows, model.pc.numCols, model.pc.values, model.pc.isTransposed)
     MatrixVerify.saveMatrix(spcaMat, params.saveDataPath, sc)
     costTime
   }

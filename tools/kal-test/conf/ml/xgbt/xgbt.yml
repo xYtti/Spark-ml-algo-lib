@@ -81,7 +81,7 @@ xgbt:
           num_workers: 51
           nthread: 4
           tree_method: "hist"
-          grow_policy: "depthwiselossltd"
+          grow_policy: "depthwise"
         mnist8m:
           eta: 0.1
           gamma: 1
@@ -97,7 +97,7 @@ xgbt:
           num_workers: 24
           nthread: 9
           tree_method: "hist"
-          grow_policy: "depthwiselossltd"
+          grow_policy: "depthwise"
       regression:
         higgs:
           eta: 0.1
@@ -113,7 +113,7 @@ xgbt:
           num_workers: 51
           nthread: 4
           tree_method: "hist"
-          grow_policy: "depthwiselossltd"
+          grow_policy: "depthwise"
         mnist8m:
           eta: 0.1
           gamma: 1
@@ -128,7 +128,7 @@ xgbt:
           num_workers: 120
           nthread: 2
           tree_method: "hist"
-          grow_policy: "depthwiselossltd"
+          grow_policy: "depthwise"
   x86_64:
     raw:
       classification:

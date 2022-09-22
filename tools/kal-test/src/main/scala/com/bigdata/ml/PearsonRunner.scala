@@ -5,9 +5,10 @@ import com.bigdata.compare.ml.MatrixVerify
 
 import org.apache.spark.ml.stat
 import org.apache.spark.ml.linalg.SQLDataTypes.VectorType
-import org.apache.spark.mllib.linalg.{DenseMatrix, Matrix, Vector, Vectors}
+import org.apache.spark.ml.linalg.{Matrix, Vectors, Vector}
+import org.apache.spark.mllib.linalg.{Vectors => OldVectors}
+import org.apache.spark.mllib.linalg.DenseMatrix
 import org.apache.spark.mllib.stat.{Statistics => OldStatistics}
-import org.apache.spark.mllib.linalg.{Vector => OldVector, Vectors => OldVectors}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.types.{StructField, StructType}
@@ -144,9 +145,10 @@ class PearsonKernel {
       StructType(List(StructField("matrix", VectorType)))
     ).persist(StorageLevel.MEMORY_ONLY)
 
-    val mat = stat.Correlation.corr(data, "matrix")
+    val result = stat.Correlation.corr(data, "matrix")
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
-    val pearsonMat = mat.collect()(0).getAs[DenseMatrix](0)
+    val mat = result.collect()(0).getAs[Matrix](0)
+    val pearsonMat = new DenseMatrix(mat.numRows, mat.numCols, mat.toArray, mat.isTransposed)
     //save result
     MatrixVerify.saveMatrix(pearsonMat, params.saveDataPath, sc)
     costTime
@@ -165,7 +167,7 @@ class PearsonKernel {
     ).persist(StorageLevel.MEMORY_ONLY)
 
     val rdd = data.select("matrix").rdd.map{
-      case Row(v: Vector) => OldVectors.fromML(v.asML)
+      case Row(v: Vector) => OldVectors.fromML(v)
     }
 
     val oldM = OldStatistics.corr(rdd, "pearson")

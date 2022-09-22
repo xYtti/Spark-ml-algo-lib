@@ -25,8 +25,8 @@ source conf/ml/svm/svm_spark.properties
 
 dataset_name=$1
 api_name=$2
-api_name=$3
-is_raw=$4
+is_raw=$3
+if_check=$4
 
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 

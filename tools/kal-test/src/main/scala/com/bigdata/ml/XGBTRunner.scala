@@ -96,6 +96,7 @@ object XGBTRunner {
       params.setNthread(paramsMap.get("nthread").asInstanceOf[Int])
       params.setTree_method(paramsMap.get("tree_method").asInstanceOf[String])
       params.setGrow_policy(paramsMap.get("grow_policy").asInstanceOf[String])
+      params.setAlgorithmType(algorithmType)
       params.setTr_fname(trainDataPath)
       params.setTs_fname(testDataPath)
       params.setIsRaw(isRaw)

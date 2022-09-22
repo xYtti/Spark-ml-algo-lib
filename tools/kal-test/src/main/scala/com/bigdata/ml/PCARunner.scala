@@ -188,7 +188,7 @@ class PCAKernel {
     }
     val costTime = (System.currentTimeMillis() - startTime) / 1000.0
     params.setLoadDataTime(loadDataTime)
-    val pcaMat = model.pc.asInstanceOf[DenseMatrix]
+    val pcaMat = new DenseMatrix(model.pc.numRows, model.pc.numCols, model.pc.values, model.pc.isTransposed)
     MatrixVerify.saveMatrix(pcaMat, params.saveDataPath, sc)
     costTime
   }
