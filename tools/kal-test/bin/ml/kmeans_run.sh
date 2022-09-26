@@ -117,9 +117,9 @@ if [ ${is_raw} == "no" ]; then
   --master ${master_val} \
   --conf "spark.executor.extraJavaOptions=${extra_java_options_val}" \
   --jars "lib/fastutil-8.3.1.jar,lib/mahout-core-0.9.jar,lib/mahout-math-0.9.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  --driver-class-path "lib/kal-test_2.11-0.1.jar:lib/mahout-math-0.9.jar:lib/mahout-core-0.9.jar:lib/fastutil-8.3.1.jar:lib/snakeyaml-1.19.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
+  --driver-class-path "lib/kal-test_${scala_version_val}-0.1.jar:lib/mahout-math-0.9.jar:lib/mahout-core-0.9.jar:lib/fastutil-8.3.1.jar:lib/snakeyaml-1.19.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   --conf "spark.executor.extraClassPath=/opt/ml_classpath/fastutil-8.3.1.jar:/opt/ml_classpath/mahout-core-0.9.jar:/opt/ml_classpath/mahout-math-0.9.jar:/opt/ml_classpath/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:/opt/ml_classpath/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${save_resultPath_val}| tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${save_resultPath_val}| tee ./log/log
 else
   spark-submit \
   --class com.bigdata.ml.KMeansRunner \
@@ -135,5 +135,5 @@ else
   --jars "lib/mahout-core-0.9.jar,lib/mahout-math-0.9.jar" \
   --driver-class-path "lib/mahout-math-0.9.jar:lib/mahout-core-0.9.jar:lib/snakeyaml-1.19.jar" \
   --conf "spark.executor.extraClassPath=lib/mahout-core-0.9.jar:lib/mahout-math-0.9.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${save_resultPath_val}| tee ./log/log
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${save_resultPath_val}| tee ./log/log
 fi

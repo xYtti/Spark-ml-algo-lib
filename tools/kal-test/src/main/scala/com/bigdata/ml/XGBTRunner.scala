@@ -1,7 +1,8 @@
 package com.bigdata.ml
 
 import com.bigdata.utils.Utils
-import com.bigdata.compare.ml.EvaluationVerify
+import com.bigdata.compare.ml.UpEvaluationVerify
+import com.bigdata.compare.ml.DownEvaluationVerify
 
 import ml.dmlc.xgboost4j.scala.spark.{XGBoostClassifier, XGBoostRegressor}
 import org.apache.spark.SparkConf
@@ -127,7 +128,11 @@ object XGBTRunner {
 
       Utils.checkDirs("report")
       if(ifCheck.equals("yes")){
-        params.setIsCorrect(EvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
+        val isCorrect = params.algorithmType match {
+          case "classification" => UpEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark)
+          case "regression" => DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark)
+        }
+        params.setIsCorrect(isCorrect)
         val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()

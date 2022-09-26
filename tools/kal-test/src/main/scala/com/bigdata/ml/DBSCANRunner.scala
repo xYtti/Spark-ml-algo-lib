@@ -75,7 +75,7 @@ object DBSCANRunner {
       params.setCostTime(costTime)
 
       Utils.checkDirs("report")
-      val writer = new FileWriter(s"report/DBSCAN${
+      val writer = new FileWriter(s"report/${params.testcaseType}_${
         Utils.getDateStrFromUTC("yyyyMMdd_HHmmss",
           System.currentTimeMillis())
       }.yml")

@@ -17,24 +17,21 @@ if [ $# -ne 2 ]; then
   exit 0
 fi
 
-outputPath="hdfs:///tmp/ml/result/dbscan/alitoukaDBSCAN/output_${dataset_name}"
-hdfsJarPath="hdfs:///tmp/ml/test/dbscan"
-
 
 dataset_name=$1
 is_raw=$2
-platform_name=$(lscpu | grep Architecture | awk '{print $2}')
+cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 model_conf=${dataset_name}-${is_raw}
 
 if [ ${is_raw} == "no" ]; then
   source conf/ml/dbscan/dbscan_spark.properties
   # concatnate strings as a new variable
-  num_executors="numExectuors_"${platform_name}
-  executor_cores="executorCores_"${platform_name}
-  executor_memory="executorMemory_"${platform_name}
-  extra_java_options="extraJavaOptions_"${platform_name}
-  driver_cores="driverCores_"${platform_name}
-  driver_memory="driverMemory_"${platform_name}
+  num_executors="numExectuors_"${cpu_name}
+  executor_cores="executorCores_"${cpu_name}
+  executor_memory="executorMemory_"${cpu_name}
+  extra_java_options="extraJavaOptions_"${cpu_name}
+  driver_cores="driverCores_"${cpu_name}
+  driver_memory="driverMemory_"${cpu_name}
   master_="master"
   deploy_mode="deployMode"
 
@@ -47,7 +44,7 @@ if [ ${is_raw} == "no" ]; then
   master_val=${!master_}
   deploy_mode_val=${!deploy_mode}
 
-  echo ${platform_name}
+  echo ${cpu_name}
   echo "${master_} : ${master_val}"
   echo "${deploy_mode} : ${deploy_mode_val}"
   echo "${driver_cores} : ${driver_cores_val}"
@@ -71,13 +68,13 @@ if [ ${is_raw} == "no" ]; then
 else
   source conf/ml/dbscan/dbscan_spark_opensource.properties
 
-  num_executors="numExectuors_"${platform_name}
-  executor_cores="executorCores_"${platform_name}
-  executor_memory="executorMemory_"${platform_name}
-  extra_java_options="extraJavaOptions_"${platform_name}
+  num_executors="numExectuors_"${cpu_name}
+  executor_cores="executorCores_"${cpu_name}
+  executor_memory="executorMemory_"${cpu_name}
+  extra_java_options="extraJavaOptions_"${cpu_name}
   driver_max_result_size="driverMaxResultSize"
-  driver_cores="driverCores_"${platform_name}
-  driver_memory="driverMemory_"${platform_name}
+  driver_cores="driverCores_"${cpu_name}
+  driver_memory="driverMemory_"${cpu_name}
   master_="master"
   deploy_mode="deployMode"
   epsilon="epsilon_"${dataset_name}
@@ -95,7 +92,7 @@ else
   epsilon_val=${!epsilon}
   min_points_val=${!min_points}
 
-  echo ${platform_name}
+  echo ${cpu_name}
   echo "${master_} : ${master_val}"
   echo "${deploy_mode} : ${deploy_mode_val}"
   echo "${driver_cores} : ${driver_cores_val}"
@@ -135,6 +132,9 @@ save_resultPath=saveResultPath
 save_resultPath_val=${!save_resultPath}
 data_path_val=${!dataset_name}
 echo "${dataset_name} : ${data_path_val}"
+
+outputPath="${save_resultPath_val}/dbscan/alitoukaDBSCAN/output_${dataset_name}"
+hdfsJarPath="hdfs:///tmp/ml/test/dbscan"
 
 echo "start to clean cache and sleep 30s"
 ssh server1 "echo 3 > /proc/sys/vm/drop_caches"

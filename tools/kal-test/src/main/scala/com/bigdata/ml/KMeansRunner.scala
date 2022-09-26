@@ -1,7 +1,7 @@
 package com.bigdata.ml
 
 import com.bigdata.utils.Utils
-import com.bigdata.compare.ml.EvaluationVerify
+import com.bigdata.compare.ml.DownEvaluationVerify
 
 import org.apache.hadoop.io.LongWritable
 import org.apache.mahout.math.VectorWritable
@@ -104,7 +104,7 @@ object KMeansRunner {
 
       Utils.checkDirs("report")
       if(ifCheck.equals("yes")){
-        params.setIsCorrect(EvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
+        params.setIsCorrect(DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
         val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
