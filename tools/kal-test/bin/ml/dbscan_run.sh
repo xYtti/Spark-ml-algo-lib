@@ -151,7 +151,7 @@ if [ ${is_raw} == "no" ]; then
   scp lib/fastutil-8.3.1.jar lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar root@agent3:/opt/ml_classpath/
 
   spark-submit \
-  --class com.bigdata.ml.DBSCANRunner \
+  --class org.apache.spark.ml.clustering.DBSCANRunner \
   --deploy-mode ${deploy_mode_val} \
   --driver-cores ${driver_cores_val} \
   --driver-memory ${driver_memory_val} \
