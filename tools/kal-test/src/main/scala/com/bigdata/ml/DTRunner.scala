@@ -261,6 +261,10 @@ class DTKernel {
           .setCacheNodeIds(useNodeIdCache)
           .setCheckpointInterval(checkpointInterval)
           .setMaxMemoryInMB(maxMemoryInMB)
+        if (params.apiName == "fit"){
+          oldDt.setMaxBins(maxBins)
+          oldDt.setMaxDepth(maxDepth)
+        }
         oldDt
       }
       case "regression" =>{
@@ -272,12 +276,12 @@ class DTKernel {
           .setCacheNodeIds(useNodeIdCache)
           .setCheckpointInterval(checkpointInterval)
           .setMaxMemoryInMB(maxMemoryInMB)
+        if (params.apiName == "fit"){
+          oldDt.setMaxBins(maxBins)
+          oldDt.setMaxDepth(maxDepth)
+        }
         oldDt
       }
-    }
-    if (params.apiName == "fit"){
-      dTree.setMaxBins(maxBins)
-      dTree.setMaxDepth(maxDepth)
     }
 
     val pipeline = if (!indexLabelDone && params.algorithmType == "classification") {
