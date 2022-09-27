@@ -21,6 +21,7 @@ import scala.beans.BeanProperty
 class XGBTConfig extends Serializable{
   @BeanProperty var xgbt: util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String, util.HashMap[String,Object]]]]]=_
 }
+
 class XGBTParams extends Serializable{
   @BeanProperty var eta: Double = _
   @BeanProperty var gamma: Double = _
@@ -54,6 +55,7 @@ class XGBTParams extends Serializable{
   @BeanProperty var ifCheck: String = _
   @BeanProperty var isCorrect: String = _
 }
+
 object XGBTRunner {
   def main(args: Array[String]): Unit = {
     try{
