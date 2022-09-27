@@ -108,7 +108,7 @@ class DBSCANKernel {
       .setSampleRate(params.sampleRate)
 
     val globalClustersDF = model.fitPredict(data)
-    globalClustersDF.foreachPartition(_ => {})
+    globalClustersDF.foreachPartition((_:Iterator[Row]) => {})
 
     globalClustersDF.cache()
     val pointTypeArr = globalClustersDF.select("prediction").collect().map(_(0)).map(x => x.toString.toInt)

@@ -115,6 +115,7 @@ object XGBTRunner {
         params.setVerifiedDataPath(params.saveDataPath)
         params.setSaveDataPath(s"${params.saveDataPath}_raw")
       }
+      params.setTestcaseType(appName)
       
       val conf = new SparkConf().setAppName(appName).setMaster(master)
       val commonParas =Array(
