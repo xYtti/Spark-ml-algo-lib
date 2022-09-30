@@ -82,7 +82,7 @@ object KMeansRunner {
       params.setIsRaw(isRaw)
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("KMeans")
-      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}_${datasetName}_${dataStructure}_${apiName}")
+      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}_${dataStructure}_${apiName}")
       params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${datasetName}_${dataStructure}_${apiName}"
       if (isRaw.equals("yes")){
@@ -105,7 +105,7 @@ object KMeansRunner {
       Utils.checkDirs("report")
       if(ifCheck.equals("yes")){
         params.setIsCorrect(DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
-        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }

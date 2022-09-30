@@ -104,7 +104,7 @@ object XGBTRunner {
       params.setDatasetName(datasetName)
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("XGBT")
-      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${algorithmType}_${datasetName}_${cpuName}")
+      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${algorithmType}_${datasetName}")
       params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       if(s"${algorithmType}_${datasetName}"=="classification_mnist8m"){
         params.setNum_class(paramsMap.get("num_class").asInstanceOf[Int])
@@ -134,7 +134,7 @@ object XGBTRunner {
           case "regression" => DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark)
         }
         params.setIsCorrect(isCorrect)
-        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }
@@ -172,11 +172,14 @@ class XGBTKernel {
     paramsAnyMap += ("nthread" -> params.getNthread)
     paramsAnyMap += ("tree_method" -> params.getTree_method)
     paramsAnyMap += ("grow_policy" -> params.getGrow_policy)
-    paramsAnyMap += ("enable_bbgen" -> params.getEnable_bbgen)
-    paramsAnyMap += ("rabit_enable_tcp_no_delay" -> params.getRabit_enable_tcp_no_delay)
     if(s"${params.algorithmType}_${params.datasetName}"=="classification_mnist8m") {
       paramsAnyMap += ("num_class" -> params.getNum_class)
     }
+    if (params.isRaw == "no"){
+      paramsAnyMap += ("enable_bbgen" -> params.getEnable_bbgen)
+      paramsAnyMap += ("rabit_enable_tcp_no_delay" -> params.getRabit_enable_tcp_no_delay)
+    }
+
     val start_time = System.currentTimeMillis()
     val XGBTrain = params.algorithmType match {
       case "classification" =>

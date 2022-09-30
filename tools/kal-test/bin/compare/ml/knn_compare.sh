@@ -14,7 +14,10 @@ if [ $# -ne 1 ]; then
   exit 0
 fi
 
+
+
 dataset_name=$1
+cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 source conf/ml/ml_datasets.properties
 spark_version=sparkVersion
 spark_version_val=${!spark_version}
@@ -68,7 +71,7 @@ spark-submit \
 --dataPath ${data_path_val} \
 --groundTruthLocalPath ${groundTruthLocalPath}
 
-
+hadoop fs -mkdir -p ${groundTruthHDFSPath}
 hadoop fs -rm -r ${groundTruthHDFSPath}
 hadoop fs -put ${groundTruthLocalPath} ${groundTruthHDFSPath}
 

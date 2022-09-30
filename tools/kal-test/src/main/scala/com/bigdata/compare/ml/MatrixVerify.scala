@@ -27,12 +27,8 @@ object MatrixVerify {
     if (fs.exists(saveFile)) {
       fs.delete(saveFile, true)
     }
-    val result = mat.toArray
-    val res = new Array[String](mat.numRows)
-    for(i <- 0 until mat.numRows) {
-      res(i) = result.slice(i * mat.numRows, (i + 1) * mat.numCols).mkString(";")
-    }
-    sc.parallelize(res).repartition(1).saveAsTextFile(saveDataPath)
+    val res = toRowMajorArray(mat)
+    sc.parallelize(res.map(_.mkString(";"))).saveAsTextFile(saveDataPath)
   }
   
 
@@ -68,5 +64,25 @@ object MatrixVerify {
       }
     }
     true
+  }
+
+  def toRowMajorArray(matrix: DenseMatrix): Array[Array[Double]] = {
+    val nRow = matrix.numRows
+    val nCol = matrix.numCols
+    val arr = new Array[Array[Double]](nRow).map(_ => new Array[Double](nCol))
+    if(matrix.isTransposed){
+      var srcOffset = 0
+      for{i <- 0 until nRow} {
+        System.arraycopy(matrix.values, srcOffset, arr(i), 0, nCol)
+        srcOffset += nCol
+      }
+    } else {
+      matrix.values.indices.foreach(idx => {
+        val j = math.floor(idx / nRow).toInt
+        val i = idx % nRow
+        arr(i)(j) = matrix.values(idx)
+      })
+    }
+    arr
   }
 }

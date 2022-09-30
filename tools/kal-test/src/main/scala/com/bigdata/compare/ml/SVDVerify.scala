@@ -81,11 +81,13 @@ object SVDVerify {
     true
   }
 
-  def isEqualVector(res1: Array[Double], res2: Array[Double]): Boolean = {
+  def isEqualVector(optres: Array[Double], rawres: Array[Double]): Boolean = {
+    val res1 = optres.sorted
+    val res2 = rawres.sorted
     if (res1.length != res2.length)
       return false
     for (i <- res2.indices) {
-      if (math.abs(res1(i) - res2(i)) > 1e-6)
+      if ((math.abs(res1(i) - res2(i)) / res1(i)) > 0.001)
         return false
     }
     true

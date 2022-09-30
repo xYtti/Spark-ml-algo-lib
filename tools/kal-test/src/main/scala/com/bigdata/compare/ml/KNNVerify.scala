@@ -1,4 +1,4 @@
-package com.huawei.bigdata.ml.verfify
+package com.bigdata.compare.ml
 
 import java.io.{FileWriter, PrintWriter}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
@@ -194,7 +194,8 @@ object KNNVerify {
       isCorrect = "correct"
     else
       isCorrect = "incorrect"
-    val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+    println(s"Exec Successful: isCorrect: ${isCorrect}")
+    val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
     writerIsCorrect.write(s"KNN_${datasetName} ${isCorrect} \n")
     writerIsCorrect.close()
     spark.stop()

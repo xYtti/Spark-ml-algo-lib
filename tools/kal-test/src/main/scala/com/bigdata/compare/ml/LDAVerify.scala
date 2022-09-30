@@ -6,11 +6,11 @@ import org.apache.spark.sql.SparkSession
 
 import java.io.FileWriter
 
-object UpEvaluationVerify {
+object LDAVerify {
   def main(args: Array[String]): Unit = {
     val path0 = args(0)
     val path1 = args(1)
-    val sparkConf =  new SparkConf().setAppName("UpEvaluationVerify")
+    val sparkConf =  new SparkConf().setAppName("LDAVerify")
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
     val isCorrect = compareRes(path0, path1, spark)
     val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
@@ -30,7 +30,7 @@ object UpEvaluationVerify {
     }
     val res1 = sc.textFile(path0).collect().head.toDouble
     val res2 = sc.textFile(path1).collect().head.toDouble
-    if (res1 * (1 + 0.005) - res2 >= 0.0) {
+    if ((res2 - res1) / math.abs(res2) <= 0.005) {
       return "correct"
     }
     else {
