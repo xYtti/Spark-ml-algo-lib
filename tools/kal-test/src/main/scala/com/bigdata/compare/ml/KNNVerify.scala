@@ -5,7 +5,7 @@ import org.apache.spark.ml.linalg.{Vector, Vectors}
 import org.apache.spark.ml.neighbors.KNN
 import org.apache.spark.sql.{Row, SparkSession}
 
-object KNNVerify {
+object KNNVerify extends Serializable {
 
   /**
    * Calculate euclidean distance.
