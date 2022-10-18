@@ -1,11 +1,11 @@
-package com.huawei.bigdata.ml.verfify
+package com.bigdata.compare.ml
 
 import java.io.{FileWriter, PrintWriter}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
 import org.apache.spark.ml.neighbors.KNN
 import org.apache.spark.sql.{Row, SparkSession}
 
-object KNNVerify {
+object KNNVerify extends Serializable {
 
   /**
    * Calculate euclidean distance.
@@ -185,16 +185,13 @@ object KNNVerify {
       (id, isEqual, trueNN, myNN)
     }}.filter(!_._2).collect()
 
-    //    println("---------- incorrect cases -----------")
-    //    incorrectCases.foreach(x => {
-    //      println(s"id=${x._1}\ttrue=" + x._3.mkString(",") + s"\tmy=" + x._4.mkString(","))
-    //    })
     var isCorrect = ""
     if(incorrectCases.length == 0)
       isCorrect = "correct"
     else
       isCorrect = "incorrect"
-    val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+    println(s"Exec Successful: isCorrect: ${isCorrect}")
+    val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
     writerIsCorrect.write(s"KNN_${datasetName} ${isCorrect} \n")
     writerIsCorrect.close()
     spark.stop()

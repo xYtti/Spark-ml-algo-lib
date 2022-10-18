@@ -167,7 +167,7 @@ object DTRunner {
           case "regression" => DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark)
         }
         params.setIsCorrect(isCorrect)
-        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }
@@ -181,6 +181,7 @@ object DTRunner {
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")
+        throw e
     }
   }
 }

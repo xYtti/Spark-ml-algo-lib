@@ -1,19 +1,21 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <path0> <path1>"
   echo "1st argument: path of PrefixSpan result: eg [hdfs:///tmp/ml/result/PrefixSpan/]"
   echo "2nd argument: path of PrefixSpan result: eg [hdfs:///tmp/ml/result/PrefixSpan/]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "Usage: <path0> <path1>"
-  echo "1st argument: path of PrefixSpan result: eg [hdfs:///tmp/ml/result/PrefixSpan/]"
-  echo "2nd argument: path of PrefixSpan result: eg [hdfs:///tmp/ml/result/PrefixSpan/]"
+  usage
   exit 0
 fi
 

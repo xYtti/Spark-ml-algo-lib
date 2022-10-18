@@ -1,28 +1,27 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <api name> <isRaw> <isCheck>"
   echo "1st argument: name of dataset: e.g. 10M4096/D280M118/D40M1K"
   echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 4 arguments: <dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. 10M4096/D280M118/D40M1K"
-  echo "2nd argument: name of API: e.g. fit/fit1/fit2/fit3"
-  echo "3th argument: optimization algorithm or raw: [no/yes]"
-  echo "4th argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
 source conf/ml/svm/svm_spark.properties
-
 dataset_name=$1
 api_name=$2
 is_raw=$3

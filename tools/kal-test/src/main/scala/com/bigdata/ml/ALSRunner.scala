@@ -97,7 +97,7 @@ object ALSRunner {
       params.setIsRaw(isRaw)
       params.setIfCheck(ifCheck)
       params.setAlgorithmName("ALS")
-      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}_${dataStructure}_${apiName}_${cpuName}")
+      params.setSaveDataPath(s"${saveResultPath}/${params.algorithmName}/${datasetName}_${dataStructure}_${apiName}")
       params.setVerifiedDataPath(s"${params.saveDataPath}_raw")
       var appName = s"${params.algorithmName}_${dataStructure}_${datasetName}_${apiName}"
       if (isRaw.equals("yes")){
@@ -143,7 +143,7 @@ object ALSRunner {
       Utils.checkDirs("report")
       if(ifCheck.equals("yes")){
         params.setIsCorrect(DownEvaluationVerify.compareRes(params.saveDataPath, params.verifiedDataPath, spark))
-        val writerIsCorrect = new FileWriter(s"report/!ml_isCorrect.txt", true)
+        val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
         writerIsCorrect.write(s"${params.testcaseType} ${params.isCorrect} \n")
         writerIsCorrect.close()
       }
@@ -158,6 +158,7 @@ object ALSRunner {
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")
+        throw e
     }
 
 

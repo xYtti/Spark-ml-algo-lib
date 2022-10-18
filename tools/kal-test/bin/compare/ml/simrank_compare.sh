@@ -1,19 +1,21 @@
 #!/bin/bash
 set -e
 
+function usage() {
+  echo "Usage: <path0> <path1>"
+  echo "1st argument: path of SimRank opt result: eg [hdfs:///tmp/ml/result/SimRank/simrank3w]"
+  echo "2nd argument: path of SimRank raw result: eg [hdfs:///tmp/ml/result/SimRank/simrank3w]"
+}
+
 case "$1" in
 -h | --help | ?)
-  echo "Usage: <path0> <path1>"
-  echo "1st argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
-  echo "2nd argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "Usage: <path0> <path1>"
-  echo "1st argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
-  echo "2nd argument: path of RF result: eg [hdfs:///tmp/ml/result/RF/]"
+  usage
   exit 0
 fi
 

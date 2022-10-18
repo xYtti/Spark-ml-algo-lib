@@ -1,40 +1,34 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <data structure> <dataset name> <api name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. als/alsbs/alsh"
   echo "3rd argument: name of API: e.g. fit/fit1/fit2/fit3; for rdd: train"
   echo "4th argument: optimization algorithm or raw: [no/yes]"
   echo "5th argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 5 ]; then
-  echo "please input 5 arguments: <data structure> <dataset name> <api name> <isRaw> <isCheck>"
-  echo "1st argument: type of data structure: [dataframe/rdd]"
-  echo "2nd argument: name of dataset: e.g. als"
-  echo "3rd argument: name of API: e.g. fit/fit1/fit2/fit3; for rdd: train"
-  echo "4th argument: optimization algorithm or raw: [no/yes]"
-  echo "5th argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
-
 source conf/ml/als/als_spark.properties
-
-
 data_structure=$1
 dataset_name=$2
 api_name=$3
 is_raw=$4
 if_check=$5
-
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
-
 model_conf=${data_structure}-${dataset_name}-${api_name}-${is_raw}-${if_check}
 
 # concatnate strings as a new variable

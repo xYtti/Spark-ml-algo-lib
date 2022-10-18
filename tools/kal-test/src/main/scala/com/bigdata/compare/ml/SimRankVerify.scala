@@ -13,10 +13,6 @@ object SimRankVerify {
   def main(args: Array[String]): Unit = {
     val path0 = args(0)
     val path1 = args(1)
-    val userSimPathHw = args(0)
-    val itemSimPathHw = args(1)
-    val userSimPathOpen = args(2)
-    val itemSimPathOpen = args(3)
 
     val conf = new SparkConf().setAppName("SimRankVerify")
     val spark = SparkSession.builder().config(conf).getOrCreate()
@@ -43,7 +39,7 @@ object SimRankVerify {
   }
 
   def compareRes(path0: String, path1: String, spark: SparkSession): String = {
-    var ifCorrect = "correct"
+    var isCorrect = "correct"
     val res0UserPath = s"${path0}/user"
     val res0ItemPath = s"${path0}/item"
     val res1UserPath = s"${path1}/user"
@@ -55,11 +51,11 @@ object SimRankVerify {
     val userSim = res0User.join(res1User, Seq("user1", "user2"), "full")
     val itemSim = res0Item.join(res1Item, Seq("item1", "item2"), "full")
     userSim.foreach(row =>
-    {if(math.abs(row.getDouble(2) - row.getDouble(3)) <= EPS)
-      ifCorrect = "incorrect"})
+    {if(math.abs(row.getDouble(2) - row.getDouble(3)) >= EPS)
+      isCorrect = "incorrect"})
     itemSim.foreach(row =>
-    {if(math.abs(row.getDouble(2) - row.getDouble(3)) <= EPS)
-      ifCorrect = "incorrect"})
-    ifCorrect
+    {if(math.abs(row.getDouble(2) - row.getDouble(3)) >= EPS)
+      isCorrect = "incorrect"})
+    isCorrect
   }
 }
