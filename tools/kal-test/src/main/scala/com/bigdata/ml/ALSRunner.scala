@@ -158,6 +158,7 @@ object ALSRunner {
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")
+        throw e
     }
 
 

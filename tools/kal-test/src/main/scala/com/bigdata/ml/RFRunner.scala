@@ -179,6 +179,7 @@ object RFRunner {
     } catch {
       case e: Throwable =>
         println(s"Exec Failure: ${e.getMessage}")
+        throw e
     }
   }
 }

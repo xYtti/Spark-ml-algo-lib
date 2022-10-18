@@ -148,6 +148,7 @@ object XGBTRunner {
     }catch {
       case e: Throwable=>
         println(s"Exec Failure: ${e.getMessage}")
+        throw e
         val sw: StringWriter = new StringWriter()
         val pw: PrintWriter = new PrintWriter(sw)
         e.printStackTrace(pw)
