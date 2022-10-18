@@ -1,20 +1,22 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <path0> <path1>"
   echo "1st argument: path of opt result: eg [hdfs:///tmp/ml/result/LDA/D20M200K_dataframe_fit1]"
   echo "2nd argument: path of raw result: eg [hdfs:///tmp/ml/result/LDA/D20M200K_dataframe_fit1_raw]"
   echo "Applicable to algorithm LDA"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "Usage: <path0> <path1>"
-  echo "1st argument: path of opt result: eg [hdfs:///tmp/ml/result/LDA/D20M200K_dataframe_fit1]"
-  echo "2nd argument: path of raw result: eg [hdfs:///tmp/ml/result/LDA/D20M200K_dataframe_fit1_raw]"
+  usage
   exit 0
 fi
 

@@ -1,32 +1,32 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <isRaw> <isCheck>"
   echo "1rd argument: name of dataset: e.g. D10m200m"
   echo "2th argument: optimization algorithm or raw: [no/yes]"
   echo "3th argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
 esac
 
 if [ $# -ne 3 ]; then
-  echo "please input 3 arguments: <dataset name> <isRaw> <isCheck>"
-  echo "1rd argument: name of dataset: e.g. D10m200m"
-  echo "2th argument: optimization algorithm or raw: [no/yes]"
-  echo "3th argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
 
 source conf/ml/idf/idf_spark.properties
-
 dataset_name=$1
 is_raw=$2
 if_check=$3
-
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 model_conf=${dataset_name}-${is_raw}-${if_check}
+
 # concatnate strings as a new variable
 num_executors=${cpu_name}_${dataset_name}"_numExecutors"
 executor_cores=${cpu_name}_${dataset_name}"_executorCores"
@@ -104,8 +104,8 @@ if [ ${is_raw} == "no" ]; then
   --executor-memory ${executor_memory_val} \
   --conf spark.executor.extraJavaOptions=${executor_extra_java_options_val} \
   --driver-java-options "-Xms15g" \
-  --driver-class-path "lib/snakeyaml-1.19.jar:lib/json4s-ext_2.11-3.2.11.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
-  --jars "lib/snakeyaml-1.19.jar,lib/json4s-ext_2.11-3.2.11.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
+  --driver-class-path "lib/snakeyaml-1.19.jar:lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar:lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
+  --jars "lib/snakeyaml-1.19.jar,lib/boostkit-ml-acc_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-core_${scala_version_val}-${kal_version_val}-${spark_version_val}.jar,lib/boostkit-ml-kernel-${scala_version_val}-${kal_version_val}-${spark_version_val}-${cpu_name}.jar" \
   ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 else
   spark-submit \
@@ -120,6 +120,6 @@ else
   --conf spark.executor.extraJavaOptions=${executor_extra_java_options_val} \
   --driver-java-options "-Xms15g" \
   --driver-class-path "lib/snakeyaml-1.19.jar" \
-  --jars "lib/snakeyaml-1.19.jar,lib/json4s-ext_2.11-3.2.11.jar,lib/fastutil-8.3.1.jar" \
-  ./lib/kal-test_2.11-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
+  --jars "lib/snakeyaml-1.19.jar,lib/fastutil-8.3.1.jar" \
+  ./lib/kal-test_${scala_version_val}-0.1.jar ${model_conf} ${data_path_val} ${cpu_name} ${save_resultPath_val}| tee ./log/log
 fi

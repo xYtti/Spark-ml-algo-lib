@@ -1,28 +1,27 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <data structure> <dataset name> <isRaw> <isCheck>"
   echo "1st argument: type of data structure: [dataframe/rdd]"
   echo "2nd argument: name of dataset: e.g. CP10M1K/CP2M5K/CP1M10K"
   echo "3nd argument: optimization algorithm or raw: [no/yes]"
   echo "4rd argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 4 arguments: <data structure> <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: type of data structure: [dataframe/rdd]"
-  echo "2nd argument: name of dataset: e.g. CP10M1K/CP2M5K/CP1M10K"
-  echo "3nd argument: optimization algorithm or raw: [no/yes]"
-  echo "4rd argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
 source conf/ml/spearman/spearman_spark.properties
-
 data_structure=$1
 dataset_name=$2
 is_raw=$3

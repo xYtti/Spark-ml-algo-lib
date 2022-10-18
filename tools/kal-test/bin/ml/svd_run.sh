@@ -1,27 +1,26 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <isRaw> <isCheck>"
   echo "1st argument: name of dataset: e.g. D10M1K/D1M10K/MESH/RUCCI"
   echo "2nd argument: optimization algorithm or raw: [no/yes]"
   echo "3rd argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 3 ]; then
-  echo "please input 1 argument: <dataset name> <isRaw> <isCheck>"
-  echo "1st argument: name of dataset: e.g. D10M1K/D1M10K/MESH/RUCCI"
-  echo "2nd argument: optimization algorithm or raw: [no/yes]"
-  echo "3rd argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
-
 source conf/ml/svd/svd_spark.properties
-
 dataset_name=$1
 is_raw=$2
 if_check=$3

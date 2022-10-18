@@ -1,121 +1,93 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <isRaw>"
   echo "1st argument: name of dataset: e.g. bremenSmall/farm/house"
   echo "2nd argument: optimization algorithm or raw: [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "please input 2 arguments: <dataset name> <isRaw>"
-  echo "1st argument: name of dataset: e.g. bremenSmall/farm/house"
-  echo "2nd argument: optimization algorithm or raw: [no/yes]"
+  usage
   exit 0
 fi
 
-
+source conf/ml/dbscan/dbscan_spark.properties
 dataset_name=$1
 is_raw=$2
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
 model_conf=${dataset_name}-${is_raw}
+type=opt
+if [ $is_raw == "yes" ]; then
+  type=raw
+fi
 
-if [ ${is_raw} == "no" ]; then
-  source conf/ml/dbscan/dbscan_spark.properties
-  # concatnate strings as a new variable
-  num_executors="numExectuors_"${cpu_name}
-  executor_cores="executorCores_"${cpu_name}
-  executor_memory="executorMemory_"${cpu_name}
-  extra_java_options="extraJavaOptions_"${cpu_name}
-  driver_cores="driverCores_"${cpu_name}
-  driver_memory="driverMemory_"${cpu_name}
-  master_="master"
-  deploy_mode="deployMode"
+# concatnate strings as a new variable
+num_executors="numExectuors_"${type}
+executor_cores="executorCores_"${type}
+executor_memory="executorMemory_"${type}
+extra_java_options="extraJavaOptions_"${type}
+driver_cores="driverCores_"${type}
+driver_memory="driverMemory_"${type}
+master_="master"
+deploy_mode="deployMode"
 
-  num_executors_val=${!num_executors}
-  executor_cores_val=${!executor_cores}
-  executor_memory_val=${!executor_memory}
-  extra_java_options_val=${!extra_java_options}
-  driver_cores_val=${!driver_cores}
-  driver_memory_val=${!driver_memory}
-  master_val=${!master_}
-  deploy_mode_val=${!deploy_mode}
+num_executors_val=${!num_executors}
+executor_cores_val=${!executor_cores}
+executor_memory_val=${!executor_memory}
+extra_java_options_val=${!extra_java_options}
+driver_cores_val=${!driver_cores}
+driver_memory_val=${!driver_memory}
+master_val=${!master_}
+deploy_mode_val=${!deploy_mode}
 
-  echo ${cpu_name}
-  echo "${master_} : ${master_val}"
-  echo "${deploy_mode} : ${deploy_mode_val}"
-  echo "${driver_cores} : ${driver_cores_val}"
-  echo "${driver_memory} : ${driver_memory_val}"
-  echo "${num_executors} : ${num_executors_val}"
-  echo "${executor_cores}: ${executor_cores_val}"
-  echo "${executor_memory} : ${executor_memory_val}"
-  echo "${extra_java_options} : ${extra_java_options_val}"
+echo ${cpu_name}
+echo "${master_} : ${master_val}"
+echo "${deploy_mode} : ${deploy_mode_val}"
+echo "${driver_cores} : ${driver_cores_val}"
+echo "${driver_memory} : ${driver_memory_val}"
+echo "${num_executors} : ${num_executors_val}"
+echo "${executor_cores}: ${executor_cores_val}"
+echo "${executor_memory} : ${executor_memory_val}"
+echo "${extra_java_options} : ${extra_java_options_val}"
+
+if [ ! ${num_executors_val} ] \
+    || [ ! ${executor_cores_val} ] \
+    || [ ! ${executor_memory_val} ] \
+    || [ ! ${extra_java_options_val} ] \
+    || [ ! ${driver_cores_val} ] \
+    || [ ! ${driver_memory_val} ] \
+    || [ ! ${master_val} ]; then
+  echo "Some values are NULL, please confirm with the property files"
+  exit 0
+fi
 
 
-  if [ ! ${num_executors_val} ] \
-      || [ ! ${executor_cores_val} ] \
-      || [ ! ${executor_memory_val} ] \
-      || [ ! ${extra_java_options_val} ] \
-      || [ ! ${driver_cores_val} ] \
-      || [ ! ${driver_memory_val} ] \
-      || [ ! ${master_val} ]; then
-    echo "Some values are NULL, please confirm with the property files"
-    exit 0
-  fi
-else
-  source conf/ml/dbscan/dbscan_spark_opensource.properties
 
-  num_executors="numExectuors_"${cpu_name}
-  executor_cores="executorCores_"${cpu_name}
-  executor_memory="executorMemory_"${cpu_name}
-  extra_java_options="extraJavaOptions_"${cpu_name}
-  driver_max_result_size="driverMaxResultSize"
-  driver_cores="driverCores_"${cpu_name}
-  driver_memory="driverMemory_"${cpu_name}
-  master_="master"
-  deploy_mode="deployMode"
-  epsilon="epsilon_"${dataset_name}
-  min_points="minPoints_"${dataset_name}
+if [ ${is_raw} == "yes" ]; then
+  driver_max_result_size="driverMaxResultSize_"${type}
+  epsilon="epsilon_"${dataset_name}_${type}
+  min_points="minPoints_"${dataset_name}_${type}
 
-  num_executors_val=${!num_executors}
-  executor_cores_val=${!executor_cores}
-  executor_memory_val=${!executor_memory}
-  extra_java_options_val=${!extra_java_options}
   driver_max_result_size_val=${!driver_max_result_size}
-  driver_cores_val=${!driver_cores}
-  driver_memory_val=${!driver_memory}
-  master_val=${!master_}
-  deploy_mode_val=${!deploy_mode}
   epsilon_val=${!epsilon}
   min_points_val=${!min_points}
 
-  echo ${cpu_name}
-  echo "${master_} : ${master_val}"
-  echo "${deploy_mode} : ${deploy_mode_val}"
-  echo "${driver_cores} : ${driver_cores_val}"
-  echo "${driver_memory} : ${driver_memory_val}"
-  echo "${num_executors} : ${num_executors_val}"
-  echo "${executor_cores}: ${executor_cores_val}"
-  echo "${executor_memory} : ${executor_memory_val}"
-  echo "${extra_java_options} : ${extra_java_options_val}"
   echo "${driver_max_result_size} : ${driver_max_result_size_val}"
   echo "${epsilon} : ${epsilon_val}"
   echo "${min_points} : ${min_points_val}"
 
 
-  if [ ! ${num_executors_val} ] \
-      || [ ! ${executor_cores_val} ] \
-      || [ ! ${executor_memory_val} ] \
-      || [ ! ${driver_max_result_size_val} ] \
-      || [ ! ${extra_java_options_val} ] \
-      || [ ! ${driver_cores_val} ] \
-      || [ ! ${driver_memory_val} ] \
+  if [ ! ${driver_max_result_size_val} ] \
       || [ ! ${epsilon_val} ] \
-      || [ ! ${min_points_val} ] \
-      || [ ! ${master_val} ]; then
+      || [ ! ${min_points_val} ]; then
     echo "Some values are NULL, please confirm with the property files"
     exit 0
   fi
@@ -191,7 +163,7 @@ else
   CostTime=$(cat dbscan_tmp.log | grep "train total" | awk '{print $3}')
   currentTime=$(date "+%Y%m%d_%H%M%S")
   rm -rf dbscan_tmp.log
-  echo -e "algorithmName: DBSCAN\ncostTime: ${CostTime}\ndatasetName: ${dataset_name}\nisRaw: 'yes'\ntestcaseType: DBSCAN_opensource_${dataset_name}\n" > ./report/"DBSCAN_${currentTime}.yml"
+  echo -e "algorithmName: DBSCAN\ncostTime: ${CostTime}\ndatasetName: ${dataset_name}\nisRaw: 'yes'\ntestcaseType: DBSCAN_opensource_${dataset_name}\n" > ./report/"DBSCAN_${dataset_name}_raw_${currentTime}.yml"
   echo "Exec Successful: costTime: ${CostTime}" > ./log/log
 fi
 

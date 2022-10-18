@@ -1,35 +1,32 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <algorithm type> <isRaw> <isCheck>"
   echo "1rd argument: name of dataset: e.g. higgs/mnist8m"
   echo "2st argument: type of algorithm: [classification/regression]"
   echo "3th argument: optimization algorithm or raw: [no/yes]"
   echo "4th argument: Whether to Compare Results [no/yes]"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 4 ]; then
-  echo "please input 2 arguments: <dataset name> <algorithm type> <isRaw> <isCheck>"
-  echo "1rd argument: name of dataset: e.g. higgs/mnist8m"
-  echo "2st argument: type of algorithm: [classification/regression]"
-  echo "3th argument: optimization algorithm or raw: [no/yes]"
-  echo "4th argument: Whether to Compare Results [no/yes]"
+  usage
   exit 0
 fi
 
-
 source conf/ml/xgbt/xgbt_spark.properties
-
 dataset_name=$1
 algorithm_type=$2
 is_raw=$3
 if_check=$4
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
-
 model_conf=${algorithm_type}-${dataset_name}-${is_raw}-${if_check}
 
 # concatnate strings as a new variable

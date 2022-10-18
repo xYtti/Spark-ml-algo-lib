@@ -1,20 +1,22 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <path0> <path1>"
   echo "1st argument: path of Cov result: eg [hdfs:///tmp/ml/result/Cov/CP10M1K]"
   echo "2nd argument: path of Cov result: eg [hdfs:///tmp/ml/result/Cov/CP10M1K_raw]"
   echo "Applicable to algorithm Cov PCA Pearson SPCA Spearman"
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "Usage: <path0> <path1>"
-  echo "1st argument: path of Cov result: eg [hdfs:///tmp/ml/result/Cov/]"
-  echo "2nd argument: path of Cov result: eg [hdfs:///tmp/ml/result/Cov/]"
+  usage
   exit 0
 fi
 

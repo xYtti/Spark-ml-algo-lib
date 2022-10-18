@@ -1,27 +1,27 @@
 #!/bin/bash
 set -e
 
-case "$1" in
--h | --help | ?)
+function usage() {
   echo "Usage: <dataset name> <isRaw>"
   echo "1st argument: name of dataset: e.g. glove/gist/deep1b"
   echo "2th argument: optimization algorithm or raw: [no/yes]"
   echo "if u want to compare result, pls execute {./bin/compare/ml/KNNVerify.sh <dataset_name>} "
+}
+
+case "$1" in
+-h | --help | ?)
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 2 ]; then
-  echo "please input 2 argument: <dataset name> <isRaw>"
-  echo "1st argument: name of dataset: e.g. glove/gist/deep1b"
-  echo "2th argument: optimization algorithm or raw: [no/yes]"
-  echo "if u want to compare result, pls execute {./bin/compare/ml/KNNVerify.sh <dataset_name>} "
+  usage
   exit 0
 fi
 
 
 source conf/ml/knn/knn_spark.properties
-
 dataset_name=$1
 is_raw=$2
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')

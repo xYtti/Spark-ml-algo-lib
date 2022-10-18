@@ -11,9 +11,6 @@ object IDFVerify {
     val path0 = args(0)
     val path1 = args(1)
     val sparkConf =  new SparkConf().setAppName("IDFVerify")
-    sparkConf.set("spark.driver.maxResultSize", "256G")
-    sparkConf.set("spark.sophon.ml.idf.combineStrategy", "auto")
-    //sparkConf.set("spark.sophon.ml.idf.fetchMethod", "fold")
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
     val isCorrect = compareRes(path0, path1, spark)
     val writerIsCorrect = new FileWriter(s"report/ml_isCorrect.txt", true)
@@ -48,8 +45,8 @@ object IDFVerify {
     val res1File = new Path(path0)
     val res2File = new Path(path1)
     if (fs.exists(res1File) && fs.exists(res2File)) {
-      val res1 = sc.textFile(path0).map(_.toDouble).collect()
-      val res2 = sc.textFile(path1).map(_.toDouble).collect()
+      val res1 = sc.textFile(path0).map(_.toDouble).collect().toArray
+      val res2 = sc.textFile(path1).map(_.toDouble).collect().toArray
       val numMismatch = res2.seq.zip(res1).count(v => math.abs(v._1 - v._2) > 1E-1)
       if (numMismatch != 0 ) {
         return "correct"
@@ -57,16 +54,6 @@ object IDFVerify {
         return "incorrect"
       }
     }
-      /*
-      if (isEqualRes(res1, res2)) {
-        return "correct"
-      }
-      else {
-        return "incorrect"
-      }
-    }
-
-       */
     else{
       return "invaildComparison"
     }

@@ -185,10 +185,6 @@ object KNNVerify extends Serializable {
       (id, isEqual, trueNN, myNN)
     }}.filter(!_._2).collect()
 
-    //    println("---------- incorrect cases -----------")
-    //    incorrectCases.foreach(x => {
-    //      println(s"id=${x._1}\ttrue=" + x._3.mkString(",") + s"\tmy=" + x._4.mkString(","))
-    //    })
     var isCorrect = ""
     if(incorrectCases.length == 0)
       isCorrect = "correct"

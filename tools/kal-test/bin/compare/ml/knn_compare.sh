@@ -1,20 +1,22 @@
+#!/bin/bash
 set -e
+
+function usage() {
+  echo "Usage: <dataset name>"
+  echo "1st argument: name of dataset: e.g. glove"
+}
 
 case "$1" in
 -h | --help | ?)
-  echo "Usage: <dataset name>"
-  echo "1st argument: name of dataset: e.g. glove"
+  usage
   exit 0
   ;;
 esac
 
 if [ $# -ne 1 ]; then
-  echo "please input 3 argument: <dataset name>"
-  echo "1st argument: name of dataset: e.g. glove"
+  usage
   exit 0
 fi
-
-
 
 dataset_name=$1
 cpu_name=$(lscpu | grep Architecture | awk '{print $2}')
@@ -105,8 +107,3 @@ spark-submit \
 --dataset_name ${dataset_name} \
 --dataPath ${data_path_val} \
 --groundTruthHDFSPath ${groundTruthHDFSPath}
-
-
-
-
-
