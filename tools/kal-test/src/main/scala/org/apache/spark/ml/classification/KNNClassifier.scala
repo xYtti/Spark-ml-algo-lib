@@ -12,6 +12,7 @@ import org.apache.spark.sql.types.{DoubleType, StructType}
 import org.apache.spark.sql.{DataFrame, Dataset, Row}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.SparkException
+import org.apache.spark.ml.stat.MultiClassSummarizer
 
 import scala.collection.mutable.ArrayBuffer
 
